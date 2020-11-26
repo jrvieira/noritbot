@@ -1,26 +1,19 @@
 const bot = require('./core.js')
 
-const admins = [
-   'ze',
-   'matos',
-   'marques',
-   'ruivalente',
-   'pacholas',
-   'kill',
-   'sanches',
-   'rafa',
-   'xico',
-   'bifes',
-   'sergio',
-   'tomas',
-   'neves',
-]
-
 
 // debug
 
-bot.command('debug', ctx => console.info(ctx.updateType, ctx.message))
+bot.command('debug', debug)
 
+async function debug (ctx) {
+
+   let data = await ctx.getChatAdministrators(ctx.message.chat.id)
+   
+   data = data.filter(u => !u.user.is_bot).map(u => u.custom_title)
+
+   console.info('* debug', data)
+
+}
 
 // oi?
 
@@ -55,17 +48,21 @@ bot.command('beer', beer)
 
 let mem_beer = bot.mem.load('beer')
 
-function beer (ctx) {
+async function beer (ctx) {
    
-   let from = ctx.message.from.first_name
+   let data = await ctx.getChatAdministrators(ctx.message.chat.id)
+   let admins = data.filter(u => !u.user.is_bot).map(u => u.custom_title)
+   
+   let from = await ctx.getChatMember(ctx.message.from.id)
+   from = from.custom_title
 
    let text = ctx.message.text.split(' ')
    let to = text[1]
    let n = +text[2]
    
-   if (isNaN(n) || !admins.includes(to)) {
+   if (isNaN(n) || !admins.includes(to) || from === to) {
 
-      ctx.reply('@' + from + ' fns')
+      ctx.reply(from + ' fns')
 
    } else {
 
@@ -73,7 +70,7 @@ function beer (ctx) {
       mem_beer[to] = mem_beer[to] || {}
       mem_beer[to][from] = mem_beer[to][from] ? mem_beer[to][from] + n : n
       bot.mem.save('beer', mem_beer)
-      ctx.reply('@' + from + ' ok!')
+      ctx.reply(from + ' ok!')
 
    }
 
