@@ -73,7 +73,7 @@ async function beer (ctx) {
       from = from.custom_title
 
       let text = ctx.message.text.split(' ')
-      let to = text[1]
+      let to = text[1].toLowerCase()
       let n = text[2] ? +text[2] : 1
       
       if (isNaN(n) || !admins.includes(to) || from === to) {

@@ -1,8 +1,19 @@
 {
 	"sanches": {
-		"rafa": 1
+		"rafa": 1,
+		"ruivalente": 1
 	},
 	"xico": {
 		"rafa": 7
+	},
+	"neves": {
+		"rafa": 1
+	},
+	"rafa": {
+		"sanches": 2
+	},
+	"ruivalente": {
+		"rafa": 1,
+		"sanches": 2
 	}
 }
