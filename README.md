@@ -16,7 +16,7 @@ https://core.telegram.org/bots/api
 
 - [x] oi?
 - [x] fns
-- [ ] tracker para dívidas de cerveja
+- [x] tracker para dívidas de cerveja
 - [ ] splitwise para pagamento de dívidas de cerveja
 - [ ] frases motivacionais 
 - [ ] daily facts
