@@ -2,7 +2,6 @@ const bot = require('./core.js')
 const fs = require('fs')
 
 
-
 // debug
 
 bot.command('debug', debug)
@@ -27,6 +26,7 @@ async function debug (ctx) {
    }
    
 }
+
 
 // oi?
 
@@ -88,6 +88,7 @@ async function pessoas (ctx) {
    }
 
 }
+
 
 // beer
 
@@ -175,6 +176,35 @@ async function beerstat (ctx) {
          r = 'nada'
 
       }
+
+   } catch (e) {
+   
+      r = ':('
+      console.error(e)
+
+   } finally {
+   
+      ctx.reply(r)
+
+   }
+
+}
+
+
+// quote
+
+bot.command('quote', quote)
+
+let mem_quote = bot.mem.load('quotes')
+
+async function quote (ctx) {
+   
+   let r
+
+   try {
+   
+	   let rand = await mem_quote[Math.random() * mem_quote.length >> 0]
+      r = rand.quote + '\n' + '- ' + rand.author
 
    } catch (e) {
    
