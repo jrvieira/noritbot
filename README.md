@@ -15,9 +15,10 @@ https://core.telegram.org/bots/api
 
 - [x] oi?
 - [x] fns
-- [ ] tracker para quem deve quantas cervejas a quem
-- [ ] splitwise para pagamento de cervejas
+- [ ] tracker para dívidas de cerveja
+- [ ] splitwise para pagamento de dívidas de cerveja
 - [ ] frases motivacionais 
+- [ ] daily facts
 - [ ] Keel Simulator (corretor ortográfico)
 - [ ] informação sobre o número de mortes diárias a alturas inconvenientes 
 - [ ] autoban durante x minutos a quem disser que "ẽ tudo uma merda"
