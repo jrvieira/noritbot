@@ -1,7 +1,7 @@
 {
 	"sanches": {
 		"rafa": 1,
-		"ruivalente": 1
+		"ruivalente": 0
 	},
 	"xico": {
 		"rafa": 7
@@ -10,7 +10,7 @@
 		"rafa": 1
 	},
 	"rafa": {
-		"sanches": 2
+		"sanches": 3
 	},
 	"ruivalente": {
 		"rafa": 1,

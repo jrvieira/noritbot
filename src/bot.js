@@ -55,6 +55,40 @@ function oi () {
 bot.hears('fds', ctx => ctx.reply('fns'))
 
 
+// pessoas
+
+bot.command('pessoas', pessoas)
+
+async function pessoas (ctx) {
+
+   let r
+   
+   try {
+
+      let admins = await ctx.getChatAdministrators(ctx.message.chat.id)    
+      admins = admins.filter(u => !u.user.is_bot).map(u => u.custom_title)
+
+      r = 'pessoas: \n'
+
+      for (let admin of admins) {
+   
+         r += '\n' + admin
+
+      }
+
+   } catch (e) {
+    
+      r = ':('
+      console.error(e)
+      
+   } finally {
+   
+      ctx.reply(r)
+
+   }
+
+}
+
 // beer
 
 bot.command('beer', ctx => ['/beer','/beer@noritbot'].includes(ctx.message.text) ? beerstat(ctx) : beer(ctx))
@@ -128,7 +162,7 @@ async function beerstat (ctx) {
 
       if (Object.keys(calc).length) {
       
-         r = from + ' :\n\n'
+         r = from + ' beer:\n\n'
 
          for (let admin in calc) {
    
