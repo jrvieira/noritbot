@@ -1,18 +1,28 @@
 const { Telegraf } = require('telegraf')
 const jlast = require('jlast')
 
-const bot = module.exports = new Telegraf(process.argv[2]).start(ctx => ctx.reply('🔥'))
+const bot = module.exports = new Telegraf(process.argv[2])
 
 bot.mem = {
    load (db) {
+      let r
       try {
-         jlast.load('mem/' + db + '.json')
+         r = jlast.load('../mem/' + db + '.json')
       } catch (e) {
+         console.error('fns load: ' + e)
          Telegraf.reply(db + '.json fns')
          Telegraf.reply(e)
+      } finally {
+         return r
       }
    },
-   save (db,data) {
-      jlast.save('mem/' + db + '.json',data)
+   save (db, data) {
+      try {
+         jlast.save('mem/' + db + '.json', data)
+      } catch (e) {
+         console.error('fns save: ' + e)
+      } finally {
+         console.info(db + ' updated')
+      }
    }
 }
