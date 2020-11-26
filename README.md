@@ -22,5 +22,5 @@ https://core.telegram.org/bots/api
 - [ ] Keel Simulator (corretor ortográfico)
 - [ ] informação sobre o número de mortes diárias a alturas inconvenientes 
 - [ ] autoban durante x minutos a quem disser que "ẽ tudo uma merda"
-- [ ] comando para listar o número de horas passadas por cada membro no warzone
+- [ ] comando para listar o número de horas passadas por cada membro no warzone https://epicstore-api.readthedocs.io/en/latest/intro.html
 - [ ] https://core.telegram.org/api/stats
