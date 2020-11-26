@@ -13,7 +13,9 @@ const admins = [
    'bifes',
    'sergio',
    'tomas',
-   'neves']
+   'neves',
+]
+
 
 // debug
 
@@ -41,9 +43,11 @@ function oi () {
 
 }
 
+
 // fns
 
 bot.hears('fds', ctx => ctx.reply('fns'))
+
 
 // beer
 
@@ -74,6 +78,7 @@ function beer (ctx) {
    }
 
 }
+
 
 // launch
 
