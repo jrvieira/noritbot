@@ -203,7 +203,7 @@ async function quote (ctx) {
 
    try {
    
-	   let rand = await mem_quote[Math.random() * mem_quote.length >> 0]
+      let rand = await mem_quote[Math.random() * mem_quote.length >> 0]
       r = rand.quote + '\n\n' + '- ' + rand.author
 
    } catch (e) {
