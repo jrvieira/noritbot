@@ -1,4 +1,6 @@
 const bot = require('./core.js')
+const fs = require('fs')
+
 
 
 // debug
@@ -7,12 +9,23 @@ bot.command('debug', debug)
 
 async function debug (ctx) {
 
-   let data = await ctx.getChatAdministrators(ctx.message.chat.id)
+   try {
    
-   data = data.filter(u => !u.user.is_bot).map(u => u.custom_title)
+      let data = await ctx.getChatAdministrators(ctx.message.chat.id)
 
-   console.info('* debug', data)
+      data = data.filter(u => !u.user.is_bot).map(u => u.custom_title)
+      console.info('* debug', data)
 
+   } catch (e) {
+   
+      console.error(e)
+
+   } finally {
+   
+      console.info('* ctx.message', ctx.message)
+   
+   }
+   
 }
 
 // oi?
@@ -44,33 +57,99 @@ bot.hears('fds', ctx => ctx.reply('fns'))
 
 // beer
 
-bot.command('beer', beer)
+bot.command('beer', ctx => ['/beer','/beer@noritbot'].includes(ctx.message.text) ? beerstat(ctx) : beer(ctx))
 
 let mem_beer = bot.mem.load('beer')
 
 async function beer (ctx) {
+
+   let r
    
-   let data = await ctx.getChatAdministrators(ctx.message.chat.id)
-   let admins = data.filter(u => !u.user.is_bot).map(u => u.custom_title)
+   try {
+
+      let admins = await ctx.getChatAdministrators(ctx.message.chat.id)    
+      admins = admins.filter(u => !u.user.is_bot).map(u => u.custom_title)
+      let from = await ctx.getChatMember(ctx.message.from.id)
+      from = from.custom_title
+
+      let text = ctx.message.text.split(' ')
+      let to = text[1]
+      let n = +text[2]
+      
+      if (isNaN(n) || !admins.includes(to) || from === to) {
+
+         r = from + ' fns'
+
+      } else {
+
+         // init entry if inexistent
+         mem_beer[to] = mem_beer[to] || {}
+         mem_beer[to][from] = mem_beer[to][from] ? mem_beer[to][from] + n : n
+         bot.mem.save('beer', mem_beer)
+         r = from + ' ok!'
+
+      }
+
+   } catch (e) {
+    
+      r = ':('
+      console.error(e)
+      
+   } finally {
    
-   let from = await ctx.getChatMember(ctx.message.from.id)
-   from = from.custom_title
+      ctx.reply(r)
 
-   let text = ctx.message.text.split(' ')
-   let to = text[1]
-   let n = +text[2]
+   }
+
+}
+
+async function beerstat (ctx) {
+
+   let r
    
-   if (isNaN(n) || !admins.includes(to) || from === to) {
+   try {
+   
+      let admins = await ctx.getChatAdministrators(ctx.message.chat.id)    
+      admins = admins.filter(u => !u.user.is_bot).map(u => u.custom_title)
+      let from = await ctx.getChatMember(ctx.message.from.id)
+      from = from.custom_title
+      
+      if (!from) throw new Error('no group admins here')
 
-      ctx.reply(from + ' fns')
+      let calc = {}
 
-   } else {
+      for (let admin of admins) {
+      
+         let debt = (mem_beer?.[from]?.[admin] || 0) - (mem_beer?.[admin]?.[from] || 0)
 
-      // init entry if inexistent
-      mem_beer[to] = mem_beer[to] || {}
-      mem_beer[to][from] = mem_beer[to][from] ? mem_beer[to][from] + n : n
-      bot.mem.save('beer', mem_beer)
-      ctx.reply(from + ' ok!')
+         if (debt) calc[admin] = debt
+
+      }
+
+      if (Object.keys(calc).length) {
+      
+         r = from + ' :\n\n'
+
+         for (let admin in calc) {
+   
+            r += admin + ' ' + calc[admin] + '\n'
+
+         }
+
+      } else {
+   
+         r = 'nada'
+
+      }
+
+   } catch (e) {
+   
+      r = ':('
+      console.error(e)
+
+   } finally {
+   
+      ctx.reply(r)
 
    }
 
