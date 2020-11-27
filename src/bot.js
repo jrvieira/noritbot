@@ -55,7 +55,7 @@ function oi () {
 bot.hears('fds', ctx => ctx.reply('fns'))
 bot.hears(/\s*merda\s*/, ctx => ctx.reply('é tudo uma <b>merda</b>'))
 bot.hears(/\s*covid\s*/, ctx => ctx.reply('🇸🇪'))
-bot.hears(/\s*:)\s*/, ctx => ctx.reply('fns 5035514 msg'))
+bot.hears(/\s*:\)\s*/, ctx => ctx.reply('fns 5035514 msg'))
 
 
 // pessoas
