@@ -1,1 +1,14 @@
-{}
+{
+	"tomas": {
+		"rafa": 1
+	},
+	"marques": {
+		"rafa": 5
+	},
+	"matos": {
+		"rafa": 5
+	},
+	"rafa": {
+		"tomas": null
+	}
+}
