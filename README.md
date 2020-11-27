@@ -20,6 +20,7 @@ https://core.telegram.org/bots/api
 - [ ] splitwise para pagamento de dívidas de cerveja
 - [ ] frases motivacionais 
 - [ ] daily facts
+- [ ] coisas com [botões](https://stackoverflow.com/questions/57330756/telegraf-unable-to-use-markdown-style-in-reply-with-inlinebuttons)
 - [ ] Keel Simulator (corretor ortográfico)
 - [ ] informação sobre o número de mortes diárias a alturas inconvenientes 
 - [ ] autoban durante x minutos a quem disser que "ẽ tudo uma merda"
