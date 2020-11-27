@@ -121,7 +121,7 @@ async function beer (ctx) {
          mem_beer[to] = mem_beer[to] || {}
          mem_beer[to][from] = mem_beer[to][from] ? mem_beer[to][from] + n : n
          bot.mem.save('beer', mem_beer)
-         r = from + '-(' + n + ')->' + to + ' #beer'
+         r = from + ' -<' + n + '>-> ' + to + ' #beer'
 
       }
 
