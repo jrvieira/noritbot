@@ -111,7 +111,7 @@ async function beer (ctx) {
       let to = text[1].toLowerCase()
       let n = text[2] ? +text[2] : 1
       
-      if (isNaN(n) || !admins.includes(to) || from === to || Math.abs(n) > 20) {
+      if (isNaN(n) || !admins.includes(to) || from === to || Math.abs(n) > 20 || !n) {
 
          r = from + ' fns'
 
@@ -121,7 +121,16 @@ async function beer (ctx) {
          mem_beer[to] = mem_beer[to] || {}
          mem_beer[to][from] = mem_beer[to][from] ? mem_beer[to][from] + n : n
          bot.mem.save('beer', mem_beer)
-         r = from + ' -<' + n + '>-> ' + to + ' #beer'
+
+	 if (n > 1) {
+
+	    r = from + ' -[' + n + ']-> ' + to + ' #beer'
+
+	} else {
+
+	    r = from + ' <-[' + Math.abs(n) + ']- ' + to + ' #beer'
+
+	}
 
       }
 
