@@ -111,7 +111,7 @@ async function beer (ctx) {
       let to = text[1].toLowerCase()
       let n = text[2] ? +text[2] : 1
       
-      if (isNaN(n) || !admins.includes(to) || from === to) {
+      if (isNaN(n) || !admins.includes(to) || from === to || Math.abs(n) > 20) {
 
          r = from + ' fns'
 
