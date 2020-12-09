@@ -366,17 +366,21 @@ function aoc_time (ctx) {
    
             records[day] = records[day] || {}
             
-            let p1 = $(member.completion_day_level[day])[0] || false
-            let p2 = $(member.completion_day_level[day])[1] || false
+            let p1 = $(member.completion_day_level[day])[0] || null
+            let p2 = $(member.completion_day_level[day])[1] || null
             
-            let d = p2.get_star_ts - p1.get_star_ts
-            let nhrs = Math.floor(d / 60 / 60)
-            let dhrs = nhrs ? ('' + nhrs + ':').padStart(3,' ') : '   '
-            let nmns = Math.floor(d / 60) - nhrs * 60
-            let dmns = ('' + nmns + '\'').padStart(3,nhrs ? '0' : ' ')
-            let dscs = ('' + (Math.floor(d - nhrs * 60 * 60 - nmns * 60))).padStart(2,'0')
+            if (p1 && p2) {
 
-            records[day][member.name] = p1 && p2 ? dhrs + dmns + dscs : '      '
+               let d = p2.get_star_ts - p1.get_star_ts
+               let nhrs = Math.floor(d / 60 / 60)
+               let dhrs = nhrs ? ('' + nhrs + ':').padStart(3,' ') : '   '
+               let nmns = Math.floor(d / 60) - nhrs * 60
+               let dmns = ('' + nmns + '\'').padStart(3,nhrs ? '0' : ' ')
+               let dscs = ('' + (Math.floor(d - nhrs * 60 * 60 - nmns * 60))).padStart(2,'0')
+
+               records[day][member.name] = dhrs + dmns + dscs
+
+            } 
 
             console.log('delta',records[day][member.name])
             console.log(p2-p1)
