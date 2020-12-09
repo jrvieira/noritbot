@@ -224,6 +224,199 @@ async function quote (ctx) {
 }
 
 
+// aoc_leaderboard
+
+bot.command('aoc_leaderboard', ctx => aoc_cooldown() ? aoc_leaderboard(ctx) : ctx.reply('calma'))
+bot.command('aoc_time', ctx => aoc_cooldown() ? aoc_time(ctx) : ctx.reply('calma'))
+
+let aoc_t = 0
+
+function aoc_cooldown () {
+
+   let now = Date.now()
+
+   if (now - aoc_t > 60000) {
+
+      aoc_t = now
+      return true
+
+   }
+
+}
+
+const { exec } = require('child_process')
+
+function aoc_leaderboard (ctx) {
+   
+   const addr = 'https://adventofcode.com/2020/leaderboard/private/view/983136.json'
+   const sess = '53616c7465645f5fc4e12522d9980eeabf2be187fc95f706679b4348d021b749adc5e3b59142db293423708e7913505b'
+   const comm = 'curl -s --cookie "session='+sess+'" '+addr
+   
+   exec (comm, (error, stdout, stderr) => {
+      if (error) {
+          return ':('
+      }
+      if (stderr) {
+          return ':('
+      }
+      return run(JSON.parse(stdout))
+   })
+   
+   function run (data) {
+   
+      let $ = Object.values
+   
+      let fmt = {
+         hour: 'numeric',
+         minute: 'numeric',
+         hour12: false,
+         timeZone: 'Europe/Lisbon'
+      }
+   
+      let members = []
+      let records = {}
+   
+      for (let member of $(data.members)) {
+   
+         members.push(member.name)
+   
+         for (let day in member.completion_day_level) {
+   
+            records[day] = records[day] || {}
+   
+            records[day][member.name] = $(member.completion_day_level[day]).map(x =>
+               new Intl.DateTimeFormat("pt-PT",fmt).format(new Date(+x.get_star_ts*1000))
+            )
+   
+         }
+   
+      }
+   
+      let print = '' 
+   
+      for (let day in records) {
+   
+         print += '\n' + day
+   
+         for (let member of members) {
+            records[day][member] = records[day][member] || ['','']
+         }
+   
+         for (let member of members) {
+            print += '   ' + (records[day][member][0] || '     ')
+         }
+   
+         print += '\n'
+         print += ' '
+   
+         for (let member of members) {
+            print += '   ' + (records[day][member][1] || '     ')
+         }
+   
+         print += '\n'
+   
+      }
+   
+      print += '\n'
+      print += ' '
+   
+      for (let member of members) {
+         print += '     ' + member.substring(0,3) + ''
+      }
+
+      ctx.replyWithHTML('<code>' + print + '\n' + '</code>')
+   
+   }  
+   
+}
+
+function aoc_time (ctx) {
+   
+   const addr = 'https://adventofcode.com/2020/leaderboard/private/view/983136.json'
+   const sess = '53616c7465645f5fc4e12522d9980eeabf2be187fc95f706679b4348d021b749adc5e3b59142db293423708e7913505b'
+   const comm = 'curl -s --cookie "session='+sess+'" '+addr
+   
+   exec (comm, (error, stdout, stderr) => {
+      if (error) {
+          return ':('
+      }
+      if (stderr) {
+          return ':('
+      }
+      return run(JSON.parse(stdout))
+   })
+   
+   function run (data) {
+   
+      let $ = Object.values
+   
+      let fmt = {
+         hour: 'numeric',
+         minute: 'numeric',
+         second: 'numeric',
+         milisecond:'numeric',
+         hour12: false,
+         timeZone: 'Europe/Lisbon'
+      }
+   
+      let members = []
+      let records = {}
+   
+      for (let member of $(data.members)) {
+   
+         members.push(member.name)
+   
+         for (let day in member.completion_day_level) {
+   
+            records[day] = records[day] || {}
+            
+            let p1 = $(member.completion_day_level[day])[0].get_star_ts
+            let p2 = $(member.completion_day_level[day])[1].get_star_ts
+            
+            let d = p2 - p1
+            let nhrs = Math.floor(d / 60 / 60)
+            let dhrs = nhrs ? ('' + nhrs + ':').padStart(3,' ') : '   '
+            let nmns = Math.floor(d / 60) - nhrs * 60
+            let dmns = ('' + nmns + '\'').padStart(3,nhrs ? '0' : ' ')
+            let dscs = ('' + (Math.floor(d - nhrs * 60 * 60 - nmns * 60))).padStart(2,'0')
+
+            records[day][member.name] = dhrs + dmns + dscs
+
+            console.log('delta',records[day][member.name])
+            console.log(p2-p1)
+
+         }
+   
+      }
+   
+      let print = '' 
+   
+      for (let day in records) {
+   
+         print += '\n' + day
+   
+         for (let member of members) {
+            print += '  ' + (records[day][member] || '     ')
+         }
+   
+         print += '\n'
+         print += ' '
+   
+      }
+   
+      print += '\n'
+      print += ' '
+   
+      for (let member of members) {
+         print += '       ' + member.substring(0,3) + ''
+      }
+
+      ctx.replyWithHTML('<code>' + print + '\n' + '</code>')
+   
+   }  
+   
+}
+
 // launch
 
 bot.launch()

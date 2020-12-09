@@ -9,6 +9,10 @@
 		"rafa": 5
 	},
 	"rafa": {
-		"tomas": 10
+		"tomas": 10,
+		"ruivalente": 1
+	},
+	"ruivalente": {
+		"rafa": 3
 	}
 }
