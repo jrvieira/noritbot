@@ -366,17 +366,17 @@ function aoc_time (ctx) {
    
             records[day] = records[day] || {}
             
-            let p1 = $(member.completion_day_level[day])[0].get_star_ts
-            let p2 = $(member.completion_day_level[day])[1].get_star_ts
+            let p1 = $(member.completion_day_level[day])[0] || false
+            let p2 = $(member.completion_day_level[day])[1] || false
             
-            let d = p2 - p1
+            let d = p2.get_star_ts - p1.get_star_ts
             let nhrs = Math.floor(d / 60 / 60)
             let dhrs = nhrs ? ('' + nhrs + ':').padStart(3,' ') : '   '
             let nmns = Math.floor(d / 60) - nhrs * 60
             let dmns = ('' + nmns + '\'').padStart(3,nhrs ? '0' : ' ')
             let dscs = ('' + (Math.floor(d - nhrs * 60 * 60 - nmns * 60))).padStart(2,'0')
 
-            records[day][member.name] = dhrs + dmns + dscs
+            records[day][member.name] = p1 && p2 ? dhrs + dmns + dscs : '      '
 
             console.log('delta',records[day][member.name])
             console.log(p2-p1)
@@ -392,7 +392,7 @@ function aoc_time (ctx) {
          print += '\n' + day
    
          for (let member of members) {
-            print += '  ' + (records[day][member] || '     ')
+            print += '  ' + (records[day][member] || '        ')
          }
    
          print += '\n'
