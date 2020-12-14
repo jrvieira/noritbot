@@ -35,10 +35,10 @@ bot.hears(/^[Oo]+i+[\s\?]*.*$/, ctx => oi() ? ctx.reply('oi?') : null)
 let oi_t = 0
 let oi_n = 0
 
-function oi () {
+function oi () { 
 
-   console.info('oi?')
    let now = Date.now()
+   console.info('oi?')
 
    if (now - oi_t > 60000 && ++ oi_n % 2) {
 
@@ -296,7 +296,7 @@ function aoc_leaderboard (ctx) {
    
       for (let day in records) {
    
-         print += '\n' + day
+         print += '\n' + day.padStart(2,' ')
    
          for (let member of members) {
             records[day][member] = records[day][member] || ['','']
@@ -307,7 +307,7 @@ function aoc_leaderboard (ctx) {
          }
    
          print += '\n'
-         print += ' '
+         print += '  '
    
          for (let member of members) {
             print += '   ' + (records[day][member][1] || '     ')
@@ -382,9 +382,6 @@ function aoc_time (ctx) {
 
             } 
 
-            console.log('delta',records[day][member.name])
-            console.log(p2-p1)
-
          }
    
       }
@@ -393,7 +390,7 @@ function aoc_time (ctx) {
    
       for (let day in records) {
    
-         print += '\n' + day
+         print += '\n' + day.padStart(2,' ')
    
          for (let member of members) {
             print += '  ' + (records[day][member] || '        ')

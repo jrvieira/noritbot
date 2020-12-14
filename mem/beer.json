@@ -1,18 +1,11 @@
 {
 	"tomas": {
-		"rafa": 11
-	},
-	"marques": {
-		"rafa": 5
-	},
-	"matos": {
-		"rafa": 5
+		"rafa": 2
 	},
 	"rafa": {
-		"tomas": 10,
-		"ruivalente": 1
+		"tomas": 10
 	},
-	"ruivalente": {
-		"rafa": 3
+	"sanches": {
+		"tomas": 30
 	}
 }
