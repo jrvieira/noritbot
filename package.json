@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "jlast": "^1.0.2",
+    "telegraf": "^3.38.0"
+  }
+}

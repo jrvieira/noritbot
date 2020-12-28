@@ -247,7 +247,7 @@ function aoc_cooldown () {
 const { exec } = require('child_process')
 
 const addr = 'https://adventofcode.com/2020/leaderboard/private/view/983136.json'
-const sess = '53616c7465645f5fc4e12522d9980eeabf2be187fc95f706679b4348d021b749adc5e3b59142db293423708e7913505b'
+const sess = '53616c7465645f5fef5fe7775166b5b6449c0e7e8c959dd3cb6b9aa4a59df539601652d75bdedefb1640dc210951178d'
 const comm = 'curl -s --cookie "session='+sess+'" '+addr
 
 function aoc_leaderboard (ctx) {
@@ -413,6 +413,28 @@ function aoc_time (ctx) {
    }  
    
 }
+
+
+// countdown 2021
+
+let countdown_2021_horas = 0
+
+setInterval(countdown_2021,1000*60)
+
+function countdown_2021 () {
+
+   let horas = Math.ceil((1609459200000 - Date.now()) / 1000 / 60 / 60)
+
+   if (horas !== countdown_2021_horas && horas > -1) {
+
+      countdown_2021_horas = horas
+
+      bot.telegram.setChatTitle(-1001245137014,'Countdown: ' + horas + (horas === 1 ? ' hora ❤️' : ' horas ❤️'))
+      
+   }
+
+}
+
 
 // launch
 
