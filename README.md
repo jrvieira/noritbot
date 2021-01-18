@@ -16,13 +16,12 @@ https://core.telegram.org/bots/api
 
 - [x] oi?
 - [x] fns
-- [x] tracker para dívidas de cerveja
-- [ ] splitwise para pagamento de dívidas de cerveja
+- [x] karma
+- [ ] splitwise
 - [ ] frases motivacionais 
 - [ ] daily facts
 - [ ] coisas com [botões](https://stackoverflow.com/questions/57330756/telegraf-unable-to-use-markdown-style-in-reply-with-inlinebuttons)
 - [ ] Keel Simulator (corretor ortográfico)
-- [ ] informação sobre o número de mortes diárias a alturas inconvenientes 
-- [ ] autoban durante x minutos a quem disser que "ẽ tudo uma merda"
-- [ ] [comando para listar o número de horas passadas por cada membro no warzone](https://develop.battle.net/)
+- [ ] covid
+- [ ] [warzone](https://develop.battle.net/)
 - [ ] estatísticas do canal: https://core.telegram.org/api/stats
