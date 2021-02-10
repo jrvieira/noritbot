@@ -436,6 +436,33 @@ function countdown_2021 () {
 }
 
 
+// javascript eval
+
+bot.command('js', ctx => ['/js','/js@noritbot'].includes(ctx.message.text) ? null : js(ctx))
+
+async function js (ctx) {
+
+   let comm = "node -p " + JSON.stringify(ctx.message.text.substring(3))
+
+   exec (comm, (error, stdout, stderr) => {
+      if (error) {
+          return ':('
+      }
+      if (stderr) {
+          return ':('
+      }
+      return run(stdout)
+   })
+
+   function run (r) {
+
+      ctx.reply(r)
+   
+   }
+
+}
+
+
 // launch
 
 bot.launch()

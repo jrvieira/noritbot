@@ -6,6 +6,14 @@
 		"tomas": 10
 	},
 	"sanches": {
-		"tomas": 30
+		"tomas": 30,
+		"xico": 5
+	},
+	"kill": {
+		"rafa": 1,
+		"tomas": 10
+	},
+	"marques": {
+		"rafa": 5
 	}
 }
