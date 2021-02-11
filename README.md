@@ -18,6 +18,7 @@ https://core.telegram.org/bots/api
 - [x] fns
 - [x] karma
 - [ ] splitwise
+- [x] citações
 - [ ] frases motivacionais 
 - [ ] daily facts
 - [ ] coisas com [botões](https://stackoverflow.com/questions/57330756/telegraf-unable-to-use-markdown-style-in-reply-with-inlinebuttons)
@@ -25,3 +26,5 @@ https://core.telegram.org/bots/api
 - [ ] covid
 - [ ] [warzone](https://develop.battle.net/)
 - [ ] estatísticas do canal: https://core.telegram.org/api/stats
+- [x] interpretador de código (js)
+
