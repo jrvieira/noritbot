@@ -1,5 +1,7 @@
 const bot = require('./core.js')
 const fs = require('fs')
+const { exec, execFile } = require('child_process')
+
 
 
 // debug
@@ -244,8 +246,6 @@ function aoc_cooldown () {
 
 }
 
-const { exec } = require('child_process')
-
 const addr = 'https://adventofcode.com/2020/leaderboard/private/view/983136.json'
 const sess = '53616c7465645f5fef5fe7775166b5b6449c0e7e8c959dd3cb6b9aa4a59df539601652d75bdedefb1640dc210951178d'
 const comm = 'curl -s --cookie "session='+sess+'" '+addr
@@ -442,9 +442,13 @@ bot.command('js', ctx => ['/js','/js@noritbot'].includes(ctx.message.text) ? nul
 
 async function js (ctx) {
 
-   let comm = "node -p " + JSON.stringify(ctx.message.text.substring(3))
+   let expr = JSON.stringify(ctx.message.text.substring(3))
 
-   exec (comm, (error, stdout, stderr) => {
+   let options = {
+      cwd: '/home/safe',
+   }
+
+   execFile ('/usr/local/bin/node',['-p',expr], options, (error, stdout, stderr) => {
       if (error) {
           return ':('
       }
@@ -466,3 +470,5 @@ async function js (ctx) {
 // launch
 
 bot.launch()
+console.info('ok')
+
