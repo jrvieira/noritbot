@@ -442,7 +442,7 @@ bot.command('js', ctx => ['/js','/js@noritbot'].includes(ctx.message.text) ? nul
 
 async function js (ctx) {
 
-   let expr = JSON.stringify(ctx.message.text.substring(3))
+   let expr = ctx.message.text.substring(3)
 
    let options = {
       cwd: '/home/safe',
