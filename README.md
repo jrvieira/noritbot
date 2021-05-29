@@ -1,6 +1,6 @@
 # noritbot
 
-Bot do futuro canal oficial da malta da lan no telegram
+LAN bot
 
 ## telegraf docs (node client)
 
