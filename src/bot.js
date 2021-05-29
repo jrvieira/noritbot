@@ -417,17 +417,20 @@ function aoc_time (ctx) {
 
 // countdown 2021
 
-let countdown_2021_horas = 0
+let countdown_target = 1621033200000
 
-setInterval(countdown_2021,1000*60)
+let countdown = 0
 
-function countdown_2021 () {
+setInterval(cd,1000*60)
 
-   let horas = Math.ceil((1609459200000 - Date.now()) / 1000 / 60 / 60)
+function cd () {
 
-   if (horas !== countdown_2021_horas && horas > -1) {
 
-      countdown_2021_horas = horas
+   let horas = Math.ceil((countdown_target  - Date.now()) / 1000 / 60 / 60)
+
+   if (horas !== countdown && horas > -1) {
+
+      countdown = horas
 
       bot.telegram.setChatTitle(-1001245137014,'Countdown: ' + horas + (horas === 1 ? ' hora ❤️' : ' horas ❤️'))
       
@@ -442,18 +445,18 @@ bot.command('js', ctx => ['/js','/js@noritbot'].includes(ctx.message.text) ? nul
 
 async function js (ctx) {
 
-   let expr = ctx.message.text.substring(3)
+   let expr = ctx.message.text.split(' ').slice(1).join(' ')
 
    let options = {
       cwd: '/home/safe',
    }
 
-   execFile ('/usr/local/bin/node',['-p',expr], options, (error, stdout, stderr) => {
+   execFile('/usr/local/bin/node',['-p',expr], options, (error, stdout, stderr) => {
       if (error) {
-          return ':('
+         return ':('
       }
       if (stderr) {
-          return ':('
+         return ':('
       }
       return run(stdout)
    })
@@ -466,6 +469,82 @@ async function js (ctx) {
 
 }
 
+
+// haskell eval
+
+bot.command('hs', ctx => ['/hs','/hs@noritbot'].includes(ctx.message.text) ? null : hs(ctx))
+
+async function hs (ctx) {
+
+   let expr = ctx.message.text.split(' ').slice(1).join(' ')
+
+   let options = {
+      cwd: '/home/safe',
+   }
+
+   execFile('/usr/bin/ghc',['-ignore-dot-ghci','-e',expr], options, (error, stdout, stderr) => {
+      if (error) {
+         return ':('
+      }
+      if (stderr) {
+         return ':('
+      }
+      return run(stdout)
+   })
+
+   function run (r) {
+
+      ctx.reply(r)
+   
+   }
+
+}
+
+
+// corona stats
+
+bot.command('corona', corona)
+
+async function corona (ctx) {
+
+   let expr = ctx.message.text.split(' ').slice(1).join(' ') || 'portugal'
+
+   let options = {
+      cwd: '/home/safe',
+   }
+
+   execFile('/usr/local/bin/corona',['-j',expr], options, (error, stdout, stderr) => {
+      if (error) {
+         console.error('error:',error)
+         return ':('
+      }
+      // this package has terrible error handling
+      // if (stderr) {
+      //    console.info('stderr:',stderr)
+      //    return ':(' 
+      // }
+      return run(stdout)
+   })
+
+   function run (s) {
+
+      let j = JSON.parse(s)
+
+      let r = `${j[1]['Country']}
+<code>
+total: ${j[1]['Cases'].toLocaleString('eu')} / ${j[0]['Cases'].toLocaleString('eu')}
+p/Mil: ${j[1]['Per Million'].toLocaleString('eu')} / ${j[0]['Per Million'].toLocaleString('eu')}
+
+ativos: ${j[1]['Active'].toLocaleString('eu')} / ${j[0]['Active'].toLocaleString('eu')}
+graves: ${j[1]['Critical'].toLocaleString('eu')} / ${j[0]['Critical'].toLocaleString('eu')}
+mortes: ${j[1]['Deaths (today)'].toLocaleString('eu')} / ${j[0]['Deaths (today)'].toLocaleString('eu')} 
+</code>`
+
+      ctx.replyWithHTML(r)
+   
+   }
+
+}
 
 // launch
 

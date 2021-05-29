@@ -10,10 +10,13 @@
 		"xico": 5
 	},
 	"kill": {
-		"rafa": 1,
+		"rafa": 2,
 		"tomas": 10
 	},
 	"marques": {
 		"rafa": 5
+	},
+	"xico": {
+		"rafa": 1
 	}
 }
