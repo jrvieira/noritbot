@@ -3,7 +3,6 @@ const fs = require('fs')
 const { exec, execFile } = require('child_process')
 
 
-
 // debug
 
 bot.command('debug', debug)
@@ -52,16 +51,6 @@ function oi () {
 }
 
 
-// fns
-
-bot.hears('fds', ctx => ctx.reply('fns'))
-bot.hears(/\s*merda\s*/, ctx => ctx.replyWithHTML('é tudo uma <b>merda</b>'))
-bot.hears(/\s*covid\s*/, ctx => ctx.reply('🇸🇪'))
-bot.hears(/\s*norit\s*/, ctx => ctx.reply('ETDLCCM'))
-bot.hears(/\s*ETQLCCM\s*/, ctx => ctx.reply('*ETDLCCM'))
-bot.hears(/\s*:\)\s*/, ctx => ctx.reply('fns 5035514 msg'))
-
-
 // pessoas
 
 bot.command('pessoas', pessoas)
@@ -101,7 +90,7 @@ async function pessoas (ctx) {
 
 bot.command('beer', ctx => ['/beer','/beer@noritbot'].includes(ctx.message.text) ? beerstat(ctx) : beer(ctx))
 
-let mem_beer = bot.mem.load('beer')
+let beer_mem = bot.mem.load('beer')
 
 async function beer (ctx) {
 
@@ -125,9 +114,9 @@ async function beer (ctx) {
       } else {
 
          // init entry if inexistent
-         mem_beer[to] = mem_beer[to] || {}
-         mem_beer[to][from] = mem_beer[to][from] ? mem_beer[to][from] + n : n
-         bot.mem.save('beer', mem_beer)
+         beer_mem[to] = beer_mem[to] || {}
+         beer_mem[to][from] = beer_mem[to][from] ? beer_mem[to][from] + n : n
+         bot.mem.save('beer', beer_mem)
 
          r = from + ' -[' + n + ']-> ' + to + ' #beer'
 
@@ -163,7 +152,7 @@ async function beerstat (ctx) {
 
       for (let admin of admins) {
       
-         let debt = (mem_beer?.[from]?.[admin] || 0) - (mem_beer?.[admin]?.[from] || 0)
+         let debt = (beer_mem?.[from]?.[admin] || 0) - (beer_mem?.[admin]?.[from] || 0)
 
          if (debt) calc[admin] = debt
 
@@ -248,18 +237,18 @@ function aoc_cooldown () {
 
 }
 
-const addr = 'https://adventofcode.com/2020/leaderboard/private/view/983136.json'
-const sess = '53616c7465645f5fef5fe7775166b5b6449c0e7e8c959dd3cb6b9aa4a59df539601652d75bdedefb1640dc210951178d'
-const comm = 'curl -s --cookie "session='+sess+'" '+addr
+const aoc_addr = 'https://adventofcode.com/2020/leaderboard/private/view/983136.json'
+const aoc_sess = '53616c7465645f5fef5fe7775166b5b6449c0e7e8c959dd3cb6b9aa4a59df539601652d75bdedefb1640dc210951178d'
+const aoc_comm = 'curl -s --cookie "session='+aoc_sess+'" '+aoc_addr
 
 function aoc_leaderboard (ctx) {
    
-   exec (comm, (error, stdout, stderr) => {
+   exec (aoc_comm, (error, stdout, stderr) => {
       if (error) {
-          return ':('
+         return run(':(')
       }
       if (stderr) {
-          return ':('
+         return run(':(')
       }
       return run(JSON.parse(stdout))
    })
@@ -334,12 +323,12 @@ function aoc_leaderboard (ctx) {
 
 function aoc_time (ctx) {
    
-   exec (comm, (error, stdout, stderr) => {
+   exec (aoc_comm, (error, stdout, stderr) => {
       if (error) {
-          return ':('
+         return run(':(')
       }
       if (stderr) {
-          return ':('
+         return run(':(')
       }
       return run(JSON.parse(stdout))
    })
@@ -455,10 +444,10 @@ async function js (ctx) {
 
    execFile('/usr/local/bin/node',['-p',expr], options, (error, stdout, stderr) => {
       if (error) {
-         return ':('
+         return run(':(')
       }
       if (stderr) {
-         return ':('
+         return run(':(')
       }
       return run(stdout)
    })
@@ -486,10 +475,10 @@ async function hs (ctx) {
 
    execFile('/usr/bin/ghc',['-ignore-dot-ghci','-e',expr], options, (error, stdout, stderr) => {
       if (error) {
-         return ':('
+         return run(':(')
       }
       if (stderr) {
-         return ':('
+         return run(':(')
       }
       return run(stdout)
    })
@@ -517,10 +506,10 @@ async function py (ctx) {
 
    execFile('/usr/bin/python',['-c',expr], options, (error, stdout, stderr) => {
       if (error) {
-         return ':('
+         return run(':(')
       }
       if (stderr) {
-         return ':('
+         return run(':(')
       }
       return run(stdout)
    })
@@ -542,17 +531,15 @@ async function wa (ctx) {
 
    let query = ctx.message.text.split(' ').slice(1).join(' ')
 
-   console.info('wa:', encodeURI(query))
-
    exec ('curl -X GET "http://api.wolframalpha.com/v2/result?appid=9AUKAU-L9KJ7YX5KV&input=' + encodeURI(query) + '"', (error, stdout, stderr) => {
       if (error) {
          console.error('error:', error)
-         return ':('
+         return run(':(')
       }
       if (stderr) {
          // for some reason curl suses stderrs io metrics
          // console.error('stderr:', stderr)
-         // return ':('
+         // return run(':(')
       }
       return run(stdout)
    })
@@ -581,12 +568,12 @@ async function corona (ctx) {
    execFile('/usr/local/bin/corona',['-j',expr], options, (error, stdout, stderr) => {
       if (error) {
          console.error('error:',error)
-         return ':('
+         return run(':(')
       }
       // this package has terrible error handling
       // if (stderr) {
       //    console.info('stderr:',stderr)
-      //    return ':(' 
+      //    return run(':(') 
       // }
       return run(stdout)
    })
@@ -600,6 +587,8 @@ async function corona (ctx) {
 total: ${j[1]['Cases'].toLocaleString('eu')} / ${j[0]['Cases'].toLocaleString('eu')}
 p/Mil: ${j[1]['Per Million'].toLocaleString('eu')} / ${j[0]['Per Million'].toLocaleString('eu')}
 
+diario: ${j[1]['Cases (today)'].toLocaleString('eu')} / ${j[0]['Cases (today)'].toLocaleString('eu')}
+
 ativos: ${j[1]['Active'].toLocaleString('eu')} / ${j[0]['Active'].toLocaleString('eu')}
 graves: ${j[1]['Critical'].toLocaleString('eu')} / ${j[0]['Critical'].toLocaleString('eu')}
 mortes: ${j[1]['Deaths (today)'].toLocaleString('eu')} / ${j[0]['Deaths (today)'].toLocaleString('eu')} 
@@ -610,6 +599,17 @@ mortes: ${j[1]['Deaths (today)'].toLocaleString('eu')} / ${j[0]['Deaths (today)'
    }
 
 }
+
+
+// fns
+
+bot.hears('fds', ctx => ctx.reply('fns'))
+bot.hears(/\s*merda\s*/, ctx => ctx.replyWithHTML('é tudo uma <b>merda</b>'))
+bot.hears(/\s*covid\s*/, ctx => ctx.reply('🇸🇪'))
+bot.hears(/\s*norit\s*/, ctx => ctx.reply('ETDLCCM'))
+bot.hears(/\s*ETQLCCM\s*/, ctx => ctx.reply('*ETDLCCM'))
+bot.hears(/\s*:\)\s*/, ctx => ctx.reply('fns 5035514 msg'))
+
 
 // launch
 
