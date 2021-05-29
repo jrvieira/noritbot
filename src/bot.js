@@ -57,6 +57,8 @@ function oi () {
 bot.hears('fds', ctx => ctx.reply('fns'))
 bot.hears(/\s*merda\s*/, ctx => ctx.replyWithHTML('é tudo uma <b>merda</b>'))
 bot.hears(/\s*covid\s*/, ctx => ctx.reply('🇸🇪'))
+bot.hears(/\s*norit\s*/, ctx => ctx.reply('ETDLCCM'))
+bot.hears(/\s*ETQLCCM\s*/, ctx => ctx.reply('*ETDLCCM'))
 bot.hears(/\s*:\)\s*/, ctx => ctx.reply('fns 5035514 msg'))
 
 
@@ -488,6 +490,69 @@ async function hs (ctx) {
       }
       if (stderr) {
          return ':('
+      }
+      return run(stdout)
+   })
+
+   function run (r) {
+
+      ctx.reply(r)
+   
+   }
+
+}
+
+
+// python eval
+
+bot.command('py', ctx => ['/py','/py@noritbot'].includes(ctx.message.text) ? null : py(ctx))
+
+async function py (ctx) {
+
+   let expr = ctx.message.text.split(' ').slice(1).join(' ')
+
+   let options = {
+      cwd: '/home/safe',
+   }
+
+   execFile('/usr/bin/python',['-c',expr], options, (error, stdout, stderr) => {
+      if (error) {
+         return ':('
+      }
+      if (stderr) {
+         return ':('
+      }
+      return run(stdout)
+   })
+
+   function run (r) {
+
+      ctx.reply(r)
+   
+   }
+
+}
+
+
+// wolfram alpha
+
+bot.command('wa', ctx => ['/wa','/wa@noritbot'].includes(ctx.message.text) ? null : wa(ctx))
+
+async function wa (ctx) {
+
+   let query = ctx.message.text.split(' ').slice(1).join(' ')
+
+   console.info('wa:', encodeURI(query))
+
+   exec ('curl -X GET "http://api.wolframalpha.com/v2/result?appid=9AUKAU-L9KJ7YX5KV&input=' + encodeURI(query) + '"', (error, stdout, stderr) => {
+      if (error) {
+         console.error('error:', error)
+         return ':('
+      }
+      if (stderr) {
+         // for some reason curl suses stderrs io metrics
+         // console.error('stderr:', stderr)
+         // return ':('
       }
       return run(stdout)
    })
