@@ -531,7 +531,14 @@ async function wa (ctx) {
 
    let query = ctx.message.text.split(' ').slice(1).join(' ')
 
-   exec ('curl -X GET "http://api.wolframalpha.com/v2/result?appid=9AUKAU-L9KJ7YX5KV&input=' + encodeURI(query) + '"', (error, stdout, stderr) => {
+   let comm = `curl -G 'https://api.wolframalpha.com/v1/result' \
+-d appid=9AUKAU-L9KJ7YX5KV \
+-d input=${encodeURI(query)} \
+-d units=metric \
+-d latlong=41.15,8.62 \
+`
+
+   exec (comm, (error, stdout, stderr) => {
       if (error) {
          console.error('error:', error)
          return run(':(')
@@ -553,11 +560,26 @@ async function wa (ctx) {
 }
 
 
-// corona stats
+// wolfram alpha simple (image/info)
 
-bot.command('corona', corona)
+bot.command('wi', ctx => ['/wi','/wi@noritbot'].includes(ctx.message.text) ? null : wi(ctx))
 
-async function corona (ctx) {
+async function wi (ctx) {
+
+   let query = ctx.message.text.split(' ').slice(1).join(' ')
+
+   console.info('wi query:', query)
+
+   ctx.replyWithHTML(ctx.update.message.from.first_name + ': <a href="https://api.wolframalpha.com/v1/simple?appid=9AUKAU-L9KJ7YX5KV&layout=labelbar&units=metric&i=' + query + '">' + query + '</a>')
+
+}
+
+
+// covid stats
+
+bot.command('covid', covid)
+
+async function covid (ctx) {
 
    let expr = ctx.message.text.split(' ').slice(1).join(' ') || 'portugal'
 
@@ -606,7 +628,7 @@ mortes: ${j[1]['Deaths (today)'].toLocaleString('eu')} / ${j[0]['Deaths (today)'
 bot.hears('fds', ctx => ctx.reply('fns'))
 bot.hears(/\s+merda\s*/, ctx => ctx.replyWithHTML('é tudo uma <b>merda</b>'))
 bot.hears(/\s+covid\s*/, ctx => ctx.reply('🇸🇪'))
-bot.hears(/\s+norit\s*/, ctx => ctx.reply('ETDLCCM'))
+bot.hears(/\s+@*norit\s*/, ctx => ctx.reply('ETDLCCM'))
 bot.hears(/\s*ETQLCCM\s*/, ctx => ctx.reply('*ETDLCCM'))
 bot.hears(/\s*:\)\s*/, ctx => ctx.reply('👆👉'))
 

@@ -15,7 +15,7 @@ https://core.telegram.org/bots/api
 ## roadmap
 
 - [x] oi?
-- [x] fns
+- [x] fns/..
 - [x] karma
 - [ ] splitwise
 - [x] citações
@@ -23,8 +23,9 @@ https://core.telegram.org/bots/api
 - [ ] daily facts
 - [ ] coisas com [botões](https://stackoverflow.com/questions/57330756/telegraf-unable-to-use-markdown-style-in-reply-with-inlinebuttons)
 - [ ] Keel Simulator (corretor ortográfico)
-- [ ] covid
+- [x] covid
 - [ ] [warzone](https://develop.battle.net/)
 - [ ] estatísticas do canal: https://core.telegram.org/api/stats
-- [x] interpretador de código (js)
+- [x] interpretador de código (js/hs/py)
+- [x] wolfram alpha
 
