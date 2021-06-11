@@ -21,11 +21,29 @@ async function debug (ctx) {
       console.error(e)
 
    } finally {
-   
+
       console.info('* ctx.message', ctx.message)
+      console.info('* title', await title(ctx))
    
    }
    
+}
+
+
+async function title (ctx) {
+
+   try {
+   
+      let data = await ctx.getChatAdministrators(ctx.message.chat.id)
+
+      return data.filter(u => u.user.id == ctx.message.from.id)
+                 .map(u => u)[0].custom_title || ctx.message.from.first_name
+
+   } catch (e) {
+   
+      return ctx.message.from.first_name
+
+   }
 }
 
 
@@ -98,7 +116,7 @@ async function beer (ctx) {
    
    try {
 
-      let admins = await ctx.getChatAdministrators(ctx.message.chat.id)    
+      let admins = await ctx.getChatAdministrators(ctx.message.chat.id)
       admins = admins.filter(u => !u.user.is_bot).map(u => u.custom_title)
       let from = await ctx.getChatMember(ctx.message.from.id)
       from = from.custom_title
@@ -246,9 +264,11 @@ function aoc_leaderboard (ctx) {
    exec (aoc_comm, (error, stdout, stderr) => {
       if (error) {
          return run(':(')
+         console.error(error)
       }
       if (stderr) {
          return run(':(')
+         console.error(stderr)
       }
       return run(JSON.parse(stdout))
    })
@@ -326,9 +346,11 @@ function aoc_time (ctx) {
    exec (aoc_comm, (error, stdout, stderr) => {
       if (error) {
          return run(':(')
+         console.error(error)
       }
       if (stderr) {
          return run(':(')
+         console.error(stderr)
       }
       return run(JSON.parse(stdout))
    })
@@ -445,9 +467,11 @@ async function js (ctx) {
    execFile('/usr/local/bin/node',['-p',expr], options, (error, stdout, stderr) => {
       if (error) {
          return run(':(')
+         console.error(error)
       }
       if (stderr) {
          return run(':(')
+         console.error(stderr)
       }
       return run(stdout)
    })
@@ -476,9 +500,11 @@ async function hs (ctx) {
    execFile('/usr/bin/ghc',['-ignore-dot-ghci','-e',expr], options, (error, stdout, stderr) => {
       if (error) {
          return run(':(')
+         console.error(error)
       }
       if (stderr) {
          return run(':(')
+         console.error(stderr)
       }
       return run(stdout)
    })
@@ -507,9 +533,11 @@ async function py (ctx) {
    execFile('/usr/bin/python',['-c',expr], options, (error, stdout, stderr) => {
       if (error) {
          return run(':(')
+         console.error(error)
       }
       if (stderr) {
          return run(':(')
+         console.error(stderr)
       }
       return run(stdout)
    })
@@ -540,20 +568,22 @@ async function wa (ctx) {
 
    exec (comm, (error, stdout, stderr) => {
       if (error) {
-         console.error('error:', error)
          return run(':(')
+         console.error(error)
       }
       if (stderr) {
          // for some reason curl suses stderrs io metrics
-         // console.error('stderr:', stderr)
          // return run(':(')
+         console.error(stderr)
       }
       return run(stdout)
    })
 
+   let caller = await title(ctx)
+
    function run (r) {
 
-      ctx.reply(r)
+      ctx.reply(caller + ': ' + r)
    
    }
 
@@ -570,7 +600,7 @@ async function wi (ctx) {
 
    console.info('wi query:', query)
 
-   ctx.replyWithHTML(ctx.update.message.from.first_name + ': <a href="https://api.wolframalpha.com/v1/simple?appid=9AUKAU-L9KJ7YX5KV&layout=labelbar&units=metric&i=' + query + '">' + query + '</a>')
+   ctx.replyWithHTML(await title(ctx) + ': <a href="https://api.wolframalpha.com/v1/simple?appid=9AUKAU-L9KJ7YX5KV&layout=labelbar&units=metric&i=' + query + '">' + query + '</a>')
 
 }
 
@@ -589,13 +619,13 @@ async function covid (ctx) {
 
    execFile('/usr/local/bin/corona',['-j',expr], options, (error, stdout, stderr) => {
       if (error) {
-         console.error('error:',error)
          return run(':(')
+         console.error(error)
       }
       // this package has terrible error handling
       // if (stderr) {
-      //    console.info('stderr:',stderr)
       //    return run(':(') 
+      //    console.error(stderr)
       // }
       return run(stdout)
    })
