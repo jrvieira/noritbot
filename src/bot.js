@@ -23,7 +23,8 @@ async function debug (ctx) {
    } finally {
 
       console.info('* ctx.message', ctx.message)
-      console.info('* title', await title(ctx))
+      //console.info('* title', await title(ctx))
+      console.info('* reply', bot.telegram.sendMessage)
    
    }
    
@@ -428,16 +429,14 @@ function aoc_time (ctx) {
 }
 
 
-// countdown 2021
+// countdown
 
-let countdown_target = 1621033200000
-
+let countdown_target = 1638316800000
 let countdown = 0
 
 setInterval(cd,1000*60)
 
 function cd () {
-
 
    let horas = Math.ceil((countdown_target  - Date.now()) / 1000 / 60 / 60)
 
@@ -445,7 +444,15 @@ function cd () {
 
       countdown = horas
 
-      bot.telegram.setChatTitle(-1001245137014,'Countdown: ' + horas + (horas === 1 ? ' hora ❤️' : ' horas ❤️'))
+      if (horas < 48) {
+
+         bot.telegram.setChatTitle(-1001245137014,'Countdown: ' + horas + (horas === 1 ? ' hora ❤️' : ' horas ❤️'))
+
+      } else if (horas % 24 === 0) {
+         
+         bot.telegram.setChatTitle(-1001245137014,'Countdown: ' + (horas / 24) + ' dias ❤️')
+
+      }
       
    }
 
@@ -557,6 +564,8 @@ bot.command('wa', ctx => ['/wa','/wa@noritbot'].includes(ctx.message.text) ? nul
 
 async function wa (ctx) {
 
+   let caller = await title(ctx)
+
    let query = ctx.message.text.split(' ').slice(1).join(' ')
 
    let comm = `curl -G 'https://api.wolframalpha.com/v1/result' \
@@ -579,12 +588,10 @@ async function wa (ctx) {
       return run(stdout)
    })
 
-   let caller = await title(ctx)
-
    function run (r) {
 
       ctx.reply(caller + ': ' + r)
-   
+
    }
 
 }
@@ -653,6 +660,105 @@ mortes: ${j[1]['Deaths (today)'].toLocaleString('eu')} / ${j[0]['Deaths (today)'
 }
 
 
+// remind
+
+bot.command('remind', remind)
+
+async function remind (ctx) {
+
+   let caller = await title(ctx)
+   
+   let reminder = 0
+
+   let expr = ctx.message.text.split(' ').slice(1)
+
+   for (let e of expr) {
+
+      let n = e.slice(0,-1)
+      let t = e.slice(-1)
+
+      if (!isNaN(+n)) {
+
+         switch (t) {
+            case 'd':
+               reminder += n * 1000 * 60 * 60 * 24;
+               break;
+            case 'h':
+               reminder += n * 1000 * 60 * 60;
+               break;
+            case 'm':
+               reminder += n * 1000 * 60;
+               break;
+            default:
+               reminder = 0;
+         }
+
+      } else {
+
+         return run(':(')
+
+      }
+
+   }
+
+   let origin = Date.now()
+
+   function format (ts) { 
+
+      let date = new Date(ts)
+
+      let [month, day, hour, minute] = [date.getMonth(), date.getDate(), date.getHours(), date.getMinutes()]
+      
+      let months = ['Jan','Feb','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']
+      
+      return months[month] + ' ' + day + ' ' + (hour).toString().padStart(2,'0') + ':' + (minute).toString().padStart(2,'0')
+   
+   }
+
+   // setReminder is a better setTimeout without 32bit signed int limitation
+   function setReminder (f, t) {
+
+      t = t < 0 ? 0 : t
+
+      if (t >= 2**31) {
+         setTimeout(() => setReminder(f, t - 2**31 + 1), 2**31 - 1)
+      } else {
+         setTimeout(f, t)
+      }
+
+   }
+
+   if (reminder >= 1000 * 60) {
+
+      setReminder(() => runReply(), reminder)
+
+      let target = origin + reminder
+
+      run('reminding @ ' + format(target))
+
+      console.info('reminding @', reminder, ctx.message.message_id)
+
+   } else {
+   
+      return run(':(')
+   
+   }
+
+   function run (r) {
+
+      ctx.reply(caller + ': ' + r)
+
+   }
+
+   function runReply () {
+
+      ctx.reply('reminder from ' + format(origin), {reply_to_message_id: ctx.message.message_id})
+
+   }
+
+}
+
+
 // fns
 
 bot.hears('fds', ctx => ctx.reply('fns'))
@@ -666,5 +772,10 @@ bot.hears(/\s*:\)\s*/, ctx => ctx.reply('👆👉'))
 // launch
 
 bot.launch()
+
+// Enable graceful stop
+process.once('SIGINT', () => bot.stop('SIGINT'))
+process.once('SIGTERM', () => bot.stop('SIGTERM'))
+
 console.info('ok')
 

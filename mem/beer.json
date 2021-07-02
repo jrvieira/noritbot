@@ -3,20 +3,26 @@
 		"rafa": 3
 	},
 	"rafa": {
-		"tomas": 10
+		"tomas": 10,
+		"marques": 1
 	},
 	"sanches": {
 		"tomas": 30,
-		"xico": 5
+		"xico": 6,
+		"rafa": 3
 	},
 	"kill": {
 		"rafa": 2,
 		"tomas": 10
 	},
 	"marques": {
-		"rafa": 5
+		"rafa": 8
 	},
 	"xico": {
 		"rafa": 1
+	},
+	"neves": {
+		"rafa": 2,
+		"tomas": 10
 	}
 }
