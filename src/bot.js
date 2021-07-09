@@ -24,7 +24,7 @@ async function debug (ctx) {
 
       console.info('* ctx.message', ctx.message)
       //console.info('* title', await title(ctx))
-      console.info('* reply', bot.telegram.sendMessage)
+      //console.info('* reply', bot.telegram.sendMessage)
    
    }
    
@@ -752,7 +752,7 @@ async function remind (ctx) {
 
    function runReply () {
 
-      ctx.reply('reminder from ' + format(origin), {reply_to_message_id: ctx.message.message_id})
+      ctx.telegram.sendMessage(ctx.message.chat.id, 'reminder from ' + format(origin), {reply_to_message_id: ctx.message.message_id, allow_sending_without_reply: false /* this is not working */})
 
    }
 
