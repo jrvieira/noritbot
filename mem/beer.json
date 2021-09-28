@@ -9,7 +9,7 @@
 	"sanches": {
 		"tomas": 30,
 		"xico": 6,
-		"rafa": 3
+		"rafa": 8
 	},
 	"kill": {
 		"rafa": 2,
@@ -24,5 +24,8 @@
 	"neves": {
 		"rafa": 2,
 		"tomas": 10
+	},
+	"bifes": {
+		"rafa": 5
 	}
 }

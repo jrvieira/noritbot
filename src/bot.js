@@ -257,7 +257,7 @@ function aoc_cooldown () {
 }
 
 const aoc_addr = 'https://adventofcode.com/2020/leaderboard/private/view/983136.json'
-const aoc_sess = '53616c7465645f5fef5fe7775166b5b6449c0e7e8c959dd3cb6b9aa4a59df539601652d75bdedefb1640dc210951178d'
+const aoc_sess = '53616c7465645f5f9ad0532e17fb0aa29e9fd49e33bbebbcc268d7cfd20a94a706e9bcb152b6668468e375c2064a65ec'
 const aoc_comm = 'curl -s --cookie "session='+aoc_sess+'" '+aoc_addr
 
 function aoc_leaderboard (ctx) {
@@ -304,7 +304,7 @@ function aoc_leaderboard (ctx) {
    
       }
    
-      let print = '' 
+      let print = ''
    
       for (let day in records) {
    
@@ -734,7 +734,8 @@ async function remind (ctx) {
 
       let target = origin + reminder
 
-      run('reminding @ ' + format(target))
+      //run('reminding @ ' + format(target) + ' UTC')
+      run('ok')
 
       console.info('reminding @', reminder, ctx.message.message_id)
 
@@ -752,7 +753,8 @@ async function remind (ctx) {
 
    function runReply () {
 
-      ctx.telegram.sendMessage(ctx.message.chat.id, 'reminder from ' + format(origin), {reply_to_message_id: ctx.message.message_id, allow_sending_without_reply: false /* this is not working */})
+      //ctx.telegram.sendMessage(ctx.message.chat.id, 'reminder from ' + format(origin), {reply_to_message_id: ctx.message.message_id, allow_sending_without_reply: false /* this is not working */})
+      ctx.telegram.sendMessage(ctx.message.chat.id, 'reminder from ' + caller, {reply_to_message_id: ctx.message.message_id, allow_sending_without_reply: false /* this is not working */})
 
    }
 
