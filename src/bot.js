@@ -796,14 +796,20 @@ async function etqlccm (ctx) {
 
    let reply = ctx.message?.reply_to_message
 
-   if (reply) {
+   if (reply?.text) {
 
       try {
 
-         let date = new Date()
+         let date = new Date(reply.date*1000)
          date = date.getDate() + '/' + date.getMonth() + '/' + date.getFullYear()
 
-         mem_etqlccm.push({
+         if (!mem_etqlccm?.quotes) {
+
+            mem_etqlccm = { quotes: [] }
+
+         }
+
+         mem_etqlccm.quotes.push({
             date: date,
             quote: reply.text,
             author: await title_from_id(ctx, reply.from.id),
@@ -830,7 +836,7 @@ async function etqlccm (ctx) {
 
       try {
 
-         let quotes = await mem_etqlccm
+         let quotes = mem_etqlccm?.quotes || []
 
          if (query.length) {
 
@@ -880,7 +886,7 @@ function fns_cooldown () {
 
    let now = Date.now()
 
-   if (now - fns_t > 60000) {
+   if (now - fns_t > 60000*6) {
 
       fns_t = now
       return true
@@ -889,12 +895,18 @@ function fns_cooldown () {
 
 }
 
-bot.hears('fds', ctx => fns_cooldown() ? ctx.reply('fns') : null)
-bot.hears(/\s+merda\s*/, ctx => fns_cooldown() ? ctx.replyWithHTML('é tudo uma <b>merda</b>') : null)
-bot.hears(/\s+covid\s*/, ctx => fns_cooldown() ? ctx.reply('🇸🇪') : null)
-bot.hears(/\s+@*norit\s*/, ctx => fns_cooldown() ? ctx.reply('ETDLCCM') : null)
-bot.hears(/\s*ETQLCCM\s*/, ctx => fns_cooldown() ? ctx.reply('*ETDLCCM') : null)
-bot.hears(/\s*:\)\s*/, ctx => fns_cooldown() ? ctx.reply('👆👉') : null)
+function maybe (n) {
+
+   return n > Math.random()
+
+}
+
+bot.hears('fds', ctx => fns_cooldown() && maybe(.2) ? ctx.reply('fns') : null)
+bot.hears(/\s+merda\s*/, ctx => fns_cooldown() && maybe(.2) ? ctx.replyWithHTML('é tudo uma <b>merda</b>') : null)
+bot.hears(/\s+covid\s*/, ctx => fns_cooldown() && maybe(.2) ? ctx.reply('🇸🇪') : null)
+bot.hears(/\s+@*norit\s*/, ctx => fns_cooldown() && maybe(.2) ? ctx.reply('ETDLCCM') : null)
+bot.hears(/\s*ETQLCCM\s*/, ctx => fns_cooldown() && maybe(.2) ? ctx.reply('*ETDLCCM') : null)
+bot.hears(/\s*:\)\s*/, ctx => fns_cooldown() && maybe(.2) ? ctx.reply('👆👉') : null)
 
 
 // launch
