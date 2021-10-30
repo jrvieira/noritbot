@@ -763,12 +763,28 @@ async function remind (ctx) {
 
 // fns
 
-bot.hears('fds', ctx => ctx.reply('fns'))
-bot.hears(/\s+merda\s*/, ctx => ctx.replyWithHTML('é tudo uma <b>merda</b>'))
-bot.hears(/\s+covid\s*/, ctx => ctx.reply('🇸🇪'))
-bot.hears(/\s+@*norit\s*/, ctx => ctx.reply('ETDLCCM'))
-bot.hears(/\s*ETQLCCM\s*/, ctx => ctx.reply('*ETDLCCM'))
-bot.hears(/\s*:\)\s*/, ctx => ctx.reply('👆👉'))
+let fns_t = 0
+
+function fns_cooldown () {
+
+   let now = Date.now()
+
+   if (now - fns_t > 60000) {
+
+      fns_t = now
+      return true
+
+   }
+
+}
+
+
+bot.hears('fds', ctx => if fns_cooldown() ctx.reply('fns'))
+bot.hears(/\s+merda\s*/, ctx => if fns_cooldown() ctx.replyWithHTML('é tudo uma <b>merda</b>'))
+bot.hears(/\s+covid\s*/, ctx => if fns_cooldown() ctx.reply('🇸🇪'))
+bot.hears(/\s+@*norit\s*/, ctx => if fns_cooldown() ctx.reply('ETDLCCM'))
+bot.hears(/\s*ETQLCCM\s*/, ctx => if fns_cooldown() ctx.reply('*ETDLCCM'))
+bot.hears(/\s*:\)\s*/, ctx => if fns_cooldown() ctx.reply('👆👉'))
 
 
 // launch
