@@ -901,12 +901,12 @@ function maybe (n) {
 
 }
 
-bot.hears('fds', ctx => fns_cooldown() && maybe(.2) ? ctx.reply('fns') : null)
-bot.hears(/\s+merda\s*/, ctx => fns_cooldown() && maybe(.2) ? ctx.replyWithHTML('é tudo uma <b>merda</b>') : null)
-bot.hears(/\s+covid\s*/, ctx => fns_cooldown() && maybe(.2) ? ctx.reply('🇸🇪') : null)
-bot.hears(/\s+@*norit\s*/, ctx => fns_cooldown() && maybe(.2) ? ctx.reply('ETDLCCM') : null)
-bot.hears(/\s*ETQLCCM\s*/, ctx => fns_cooldown() && maybe(.2) ? ctx.reply('*ETDLCCM') : null)
-bot.hears(/\s*:\)\s*/, ctx => fns_cooldown() && maybe(.2) ? ctx.reply('👆👉') : null)
+bot.hears('fds', ctx => fns_cooldown() && maybe(.1) ? ctx.reply('fns') : null)
+bot.hears(/\s+merda\s*/, ctx => fns_cooldown() && maybe(.1) ? ctx.replyWithHTML('é tudo uma <b>merda</b>') : null)
+bot.hears(/\s+covid\s*/, ctx => fns_cooldown() && maybe(.1) ? ctx.reply('🇸🇪') : null)
+bot.hears(/\s+@*norit\s*/, ctx => fns_cooldown() && maybe(.1) ? ctx.reply('ETDLCCM') : null)
+bot.hears(/\s*ETQLCCM\s*/, ctx => fns_cooldown() && maybe(.1) ? ctx.reply('*ETDLCCM') : null)
+bot.hears(/\s*:\)\s*/, ctx => fns_cooldown() && maybe(.1) ? ctx.reply('👆👉') : null)
 
 
 // launch
