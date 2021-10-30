@@ -45,6 +45,24 @@ async function title (ctx) {
       return ctx.message.from.first_name
 
    }
+
+}
+
+
+async function title_from_id (ctx, id) {
+
+   try {
+
+      let data = await ctx.getChatAdministrators(ctx.message.chat.id)
+
+      return data.filter(u => u.user.id == id) .map(u => u)[0].custom_title
+
+   } catch (e) {
+
+      return ctx.message.from.first_name
+
+   }
+
 }
 
 
@@ -761,6 +779,99 @@ async function remind (ctx) {
 }
 
 
+// etqlccm
+
+bot.command('etqlccm', etqlccm)
+bot.command('etdlccm', etqlccm)
+
+let mem_etqlccm = bot.mem.load('etqlccm')
+
+async function etqlccm (ctx) {
+
+   let r
+
+   let query = ctx.message.text.split(' ').slice(1)
+
+   let caller = await title(ctx)
+
+   let reply = ctx.message?.reply_to_message
+
+   if (reply) {
+
+      try {
+
+         let date = new Date()
+         date = date.getDate() + '/' + date.getMonth() + '/' + date.getFullYear()
+
+         mem_etqlccm.push({
+            date: date,
+            quote: reply.text,
+            author: await title_from_id(ctx, reply.from.id),
+            saved: caller,
+            tags: query
+         })
+
+         let save = bot.mem.save('etqlccm',
+            mem_etqlccm
+         )
+
+         bot.mem.save(save)
+
+      } catch (e) {
+
+         r = ':('
+         console.error(e)
+
+      }
+
+      ctx.reply(caller + ': ok')
+
+   } else {
+
+      try {
+
+         let quotes = await mem_etqlccm
+
+         if (query.length) {
+
+            quotes = quotes.filter(x => x.tags.find(x => query.includes(x)))
+
+         }
+
+         if (quotes.length) {
+
+            let rand = quotes[Math.random() * quotes.length >> 0]
+            r = '<i>"' + rand.quote + '" - ' + rand.author + '</i>\n\n ' + rand.saved + ' tqlccm @ ' + rand.date + '\n\n'
+
+            rand.tags.forEach(function (t) {
+
+               r += '#' + t + ' '
+
+            })
+
+         } else {
+
+            r = ':('
+
+         }
+
+
+      } catch (e) {
+
+         r = ':('
+         console.error(e)
+
+      } finally {
+
+         ctx.replyWithHTML(r)
+
+      }
+
+   }
+
+}
+
+
 // fns
 
 let fns_t = 0
@@ -778,13 +889,12 @@ function fns_cooldown () {
 
 }
 
-
-bot.hears('fds', ctx => if fns_cooldown() ctx.reply('fns'))
-bot.hears(/\s+merda\s*/, ctx => if fns_cooldown() ctx.replyWithHTML('é tudo uma <b>merda</b>'))
-bot.hears(/\s+covid\s*/, ctx => if fns_cooldown() ctx.reply('🇸🇪'))
-bot.hears(/\s+@*norit\s*/, ctx => if fns_cooldown() ctx.reply('ETDLCCM'))
-bot.hears(/\s*ETQLCCM\s*/, ctx => if fns_cooldown() ctx.reply('*ETDLCCM'))
-bot.hears(/\s*:\)\s*/, ctx => if fns_cooldown() ctx.reply('👆👉'))
+bot.hears('fds', ctx => fns_cooldown() ? ctx.reply('fns') : null)
+bot.hears(/\s+merda\s*/, ctx => fns_cooldown() ? ctx.replyWithHTML('é tudo uma <b>merda</b>') : null)
+bot.hears(/\s+covid\s*/, ctx => fns_cooldown() ? ctx.reply('🇸🇪') : null)
+bot.hears(/\s+@*norit\s*/, ctx => fns_cooldown() ? ctx.reply('ETDLCCM') : null)
+bot.hears(/\s*ETQLCCM\s*/, ctx => fns_cooldown() ? ctx.reply('*ETDLCCM') : null)
+bot.hears(/\s*:\)\s*/, ctx => fns_cooldown() ? ctx.reply('👆👉') : null)
 
 
 // launch
