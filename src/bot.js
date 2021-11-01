@@ -31,35 +31,19 @@ async function debug (ctx) {
 }
 
 
-async function title (ctx) {
+// util
+
+async function title (ctx, id = ctx.message.from.id) {
 
    try {
 
       let data = await ctx.getChatAdministrators(ctx.message.chat.id)
 
-      return data.filter(u => u.user.id == ctx.message.from.id)
-                 .map(u => u)[0].custom_title || ctx.message.from.first_name
+      return data.filter(u => u.user.id == id)[0].custom_title
 
    } catch (e) {
 
-      return ctx.message.from.first_name
-
-   }
-
-}
-
-
-async function title_from_id (ctx, id) {
-
-   try {
-
-      let data = await ctx.getChatAdministrators(ctx.message.chat.id)
-
-      return data.filter(u => u.user.id == id) .map(u => u)[0].custom_title
-
-   } catch (e) {
-
-      return ctx.message.from.first_name
+      return ctx.message.from?.first_name || 'someone'
 
    }
 
@@ -812,7 +796,7 @@ async function etqlccm (ctx) {
          mem_etqlccm.quotes.push({
             date: date,
             quote: reply.text,
-            author: await title_from_id(ctx, reply.from.id),
+            author: await title(ctx, reply.from.id),
             saved: caller,
             tags: query
          })
