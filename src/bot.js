@@ -266,12 +266,12 @@ function aoc_leaderboard (ctx) {
 
    exec (aoc_comm, (error, stdout, stderr) => {
       if (error) {
-         return run(':(')
          console.error(error)
+         return run(':(')
       }
       if (stderr) {
-         return run(':(')
          console.error(stderr)
+         return run(':(')
       }
       return run(JSON.parse(stdout))
    })
@@ -348,12 +348,12 @@ function aoc_time (ctx) {
 
    exec (aoc_comm, (error, stdout, stderr) => {
       if (error) {
-         return run(':(')
          console.error(error)
+         return run(':(')
       }
       if (stderr) {
-         return run(':(')
          console.error(stderr)
+         return run(':(')
       }
       return run(JSON.parse(stdout))
    })
@@ -475,12 +475,12 @@ async function js (ctx) {
 
    execFile('/usr/local/bin/node',['-p',expr], options, (error, stdout, stderr) => {
       if (error) {
-         return run(':(')
          console.error(error)
+         return run(':(')
       }
       if (stderr) {
-         return run(':(')
          console.error(stderr)
+         return run(':(')
       }
       return run(stdout)
    })
@@ -508,12 +508,12 @@ async function hs (ctx) {
 
    execFile('/usr/bin/ghc',['-ignore-dot-ghci','-e',expr], options, (error, stdout, stderr) => {
       if (error) {
-         return run(':(')
          console.error(error)
+         return run(':(')
       }
       if (stderr) {
-         return run(':(')
          console.error(stderr)
+         return run(':(')
       }
       return run(stdout)
    })
@@ -541,12 +541,12 @@ async function py (ctx) {
 
    execFile('/usr/bin/python',['-c',expr], options, (error, stdout, stderr) => {
       if (error) {
-         return run(':(')
          console.error(error)
+         return run(':(')
       }
       if (stderr) {
-         return run(':(')
          console.error(stderr)
+         return run(':(')
       }
       return run(stdout)
    })
@@ -570,7 +570,7 @@ async function wa (ctx) {
 
    let query = ctx.message.text.split(' ').slice(1).join(' ')
 
-   let comm = `curl -G 'https://api.wolframalpha.com/v1/result' \
+   let comm = `curl -s -G 'https://api.wolframalpha.com/v1/result' \
 -d appid=9AUKAU-L9KJ7YX5KV \
 -d input=${encodeURI(query)} \
 -d units=metric \
@@ -579,13 +579,12 @@ async function wa (ctx) {
 
    exec (comm, (error, stdout, stderr) => {
       if (error) {
-         return run(':(')
          console.error(error)
+         return run(':(')
       }
       if (stderr) {
-         // for some reason curl suses stderrs io metrics
-         // return run(':(')
          console.error(stderr)
+         return run(':(')
       }
       return run(stdout)
    })
@@ -628,13 +627,13 @@ async function covid (ctx) {
 
    execFile('/usr/local/bin/corona',['-j',expr], options, (error, stdout, stderr) => {
       if (error) {
-         return run(':(')
          console.error(error)
+         return run(':(')
       }
       // this package has terrible error handling
       // if (stderr) {
-      //    return run(':(')
       //    console.error(stderr)
+      //    return run(':(')
       // }
       return run(stdout)
    })
@@ -757,6 +756,73 @@ async function remind (ctx) {
 
       //ctx.telegram.sendMessage(ctx.message.chat.id, 'reminder from ' + format(origin), {reply_to_message_id: ctx.message.message_id, allow_sending_without_reply: false /* this is not working */})
       ctx.telegram.sendMessage(ctx.message.chat.id, 'reminder from ' + caller, {reply_to_message_id: ctx.message.message_id, allow_sending_without_reply: false /* this is not working */})
+
+   }
+
+}
+
+
+// zodiac
+
+bot.command('horoscope', horoscope)
+bot.command('horoscopo', horoscope)
+
+async function horoscope (ctx) {
+
+   let query = ctx.message.text.split(' ').slice(1).join(' ')
+
+   zodiac = new Map([
+      ['aquarius','aquarius'],
+      ['aquario','aquarius'],
+      ['pisces','pisces'],
+      ['peixe','pisces'],
+      ['peixes','pisces'],
+      ['aries','aries'],
+      ['carneiro','aries'],
+      ['taurus','taurus'],
+      ['touro','taurus'],
+      ['gemini','gemini'],
+      ['gemeos','gemini'],
+      ['cancer','cancer'],
+      ['caranguejo','cancer'],
+      ['leo','leo'],
+      ['leao','leo'],
+      ['virgo','virgo'],
+      ['virgem','virgo'],
+      ['libra','libra'],
+      ['balanca','libra'],
+      ['scorpio','scorpio'],
+      ['escorpiao','scorpio'],
+      ['sagittarius','sagittarius'],
+      ['sagitario','sagittarius'],
+      ['capricorn','capricorn'],
+      ['capricornio','capricorn'],
+      ['capricornus','capricorn'],
+   ])
+
+   let comm = 'curl -s -L https://ohmanda.com/api/horoscope/' + zodiac.get( query.normalize('NFD').replace(/\p{Diacritic}/gu, "") )
+
+   console.info(comm)
+
+   let r
+
+   let caller = await title(ctx)
+
+   exec (comm, (error, stdout, stderr) => {
+      if (error) {
+         console.error(error)
+         return run(':(')
+      }
+      if (stderr) {
+         console.error(stderr)
+         return run(':(')
+      }
+      return run(JSON.parse(stdout).horoscope)
+   })
+
+   function run (r) {
+
+      ctx.reply(caller + ': ' + r)
 
    }
 
