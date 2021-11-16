@@ -28,4 +28,4 @@ https://core.telegram.org/bots/api
 - [ ] estatísticas do canal: https://core.telegram.org/api/stats
 - [x] interpretador de código (js/hs/py)
 - [x] wolfram alpha
-
+- [x] horoscopo
