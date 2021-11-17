@@ -13,13 +13,21 @@ fs.readFile('mem/words.txt', 'utf8', function (err, data) {
 
 // initialize global variables
 
+let alphabet = []
+let i = 90
+while (i >= 65) alphabet.push(i--)
+alphabet = alphabet
+   .map(x => String.fromCharCode(x))
+   .filter(x => !['K','W','Y'].includes(x))
+let vowels = ['A','E','I','O','U']
+
 let w = '' // letters
 let t // time start
 let scores // game score
 let done = [] // scored words
 let words_mem = bot.mem.load('words') // hi scores
 
-module.exports = ctx => {
+module.exports = async ctx => {
 
    // command arguments
    let query = ctx.message.text.split(' ').slice(1).join(' ')
@@ -64,28 +72,33 @@ module.exports = ctx => {
       // create puzzle
 
       while (w.length < 16) {
-
-         w += (1 + Math.random())
-            .toString(36)
-            .substr(0,6)
-            .replace(/[^a-z]+/g,'')
-            .replace(/[kwy]+/g,'')
-
-         let vowels = ['a','e','i','o','u']
-         w += vowels[Math.random() * vowels.length >> 0]
-
+         w += util.random(w.length % 6 ? alphabet : vowels)
       }
-
-      w = w.substr(0,16).toUpperCase()
 
       // start the game
 
-      ctx.replyWithHTML('<b>WORDS! ' + duration / 1000 + 's</b>\n\n<code>' + [...w].join(' ') + '</code>')
+      let pin = await bot.telegram.sendMessage(
+         ctx.message.chat.id,
+         '<b>WORDS!</b> ' + duration / 1000 + 's\n\n'
+            + '<code>' + [...w].join(' ') + '</code>',
+         { parse_mode: 'HTML' }
+      )
+
+      bot.telegram.pinChatMessage(
+         ctx.message.chat.id,
+         pin.message_id,
+         { disable_notification: true }
+      )
+
       console.info('waiting for answers on', w)
 
       bot.on('message', async ctx => {
 
          let p = (ctx.message?.text || '').toUpperCase()
+
+         if (w) {
+            bot.telegram.deleteMessage(ctx.message.chat.id,ctx.message.message_id)
+         }
 
          if ((Date.now() - t) < duration && valid(p)) {
             done.push(p)
@@ -93,7 +106,7 @@ module.exports = ctx => {
             let caller = await util.title(ctx)
             if (!scores.has(caller)) scores.set(caller,0)
             scores.set(caller, scores.get(caller) + val(p))
-            ctx.reply(caller + ': ' + scores.get(caller))
+            ctx.replyWithHTML('<b>' + p + '!</b> ' + caller + ' ' + scores.get(caller))
          }
 
       })
@@ -105,15 +118,12 @@ module.exports = ctx => {
          if (done.length) {
 
             for (let score of scores) {
-
                let s = score[1]
                let h = words_mem[score[0]] || 0
-
                if (s > h) {
                   words_mem[score[0]] = s
                   ctx.reply(score[0] + ': hi score!')
                }
-
             }
 
             bot.mem.save('words', words_mem)
@@ -133,6 +143,11 @@ module.exports = ctx => {
          // reset
 
          w = ''
+
+         bot.telegram.unpinChatMessage(
+            ctx.message.chat.id,
+            { message_id: pin.message_id }
+         )
 
       }, duration)
 
