@@ -165,7 +165,7 @@ module.exports = async ctx => {
                   + ' ' + score[0] + '\n'
             }
 
-            scoreboard += '\n-'
+            scoreboard += '\n🔥'
 
             for (let score of Object.entries(scores).sort((a,b) => a[1] > b[1] ? -1 : 1)) {
                scoreboard += '\n\n' + score[0] + ':'
