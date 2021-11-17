@@ -122,7 +122,7 @@ module.exports = async ctx => {
                let h = words_mem[score[0]] || 0
                if (s > h) {
                   words_mem[score[0]] = s
-                  ctx.reply(score[0] + ': hi score!')
+                  ctx.reply(score[0] + ' ⭐️ hi score!')
                }
             }
 
