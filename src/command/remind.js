@@ -36,9 +36,7 @@ module.exports = async ctx => {
    function format (ts) {
 
       let date = new Date(ts)
-
       let [month, day, hour, minute] = [date.getMonth(), date.getDate(), date.getHours(), date.getMinutes()]
-
       let months = ['Jan','Feb','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']
 
       return months[month] + ' ' + day + ' ' + (hour).toString().padStart(2,'0') + ':' + (minute).toString().padStart(2,'0')

@@ -3,6 +3,8 @@ const jlast = require('jlast')
 
 const bot = module.exports = new Telegraf(process.argv[2])
 
+// JSON memory data management
+
 bot.mem = {
    load (db) {
       let r
@@ -26,3 +28,4 @@ bot.mem = {
       }
    }
 }
+

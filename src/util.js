@@ -1,5 +1,7 @@
 module.exports = {
 
+   // get admin title of sender
+
    title: async (ctx, id = ctx.message.from.id) => {
       try {
          let data = await ctx.getChatAdministrators(ctx.message.chat.id)
@@ -9,8 +11,12 @@ module.exports = {
       }
    },
 
+   // choose random item from array
+
    random: arr => arr[Math.random() * arr.length >> 0],
 
-   maybe: n => n > Math.random(),
+   // return true with a chance of n (default 0.5)
+
+   maybe: (n = .5) => n > Math.random(),
 
 }
