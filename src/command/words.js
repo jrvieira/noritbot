@@ -23,7 +23,6 @@ let vowels = ['A','E','I','O','U']
 
 let w = '' // letters
 let scores = {} // scored words
-let done = () => Object.values(scores).reduce((a,b) => a.concat(b), []) // scored words
 let mem = bot.mem.load('words') // hi scores
 let called = { time: 0, caller: null, duration: null } // last call
 let gap = 16 // time buffer
@@ -207,8 +206,8 @@ let vals = arr => arr.map(x => val(x)).reduce((a,b) => a + b, 0)
 
 let valid = (p, caller) => {
 
-   //let done = scores?.[caller] || []
-   let done = done()
+   //let done = scores?.[caller] || [] // own scored words
+   let done = Object.values(scores).reduce((a,b) => a.concat(b), []) // *everyone's* scored words
 
    if (p.length < 5
       || done.includes(p)
