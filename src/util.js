@@ -8,7 +8,9 @@ module.exports = {
          return ctx.message.from?.first_name || 'someone'
       }
    },
+
    random: arr => arr[Math.random() * arr.length >> 0],
-   maybe: n => n > Math.random()
+
+   maybe: n => n > Math.random(),
 
 }
