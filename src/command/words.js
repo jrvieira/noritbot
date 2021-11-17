@@ -24,7 +24,7 @@ let vowels = ['A','E','I','O','U']
 let w = '' // letters
 let scores = {} // scored words
 let done = () => Object.values(scores).reduce((a,b) => a.concat(b), []) // scored words
-let words_mem = bot.mem.load('words') // hi scores
+let mem = bot.mem.load('words') // hi scores
 let called = { time: 0, caller: null, duration: null } // last call
 let gap = 16 // time buffer
 
@@ -37,9 +37,9 @@ module.exports = async ctx => {
 
       let scoreboard = ''
 
-      let padding = pad(words.mem)
+      let padding = pad(mem)
 
-      for (let score of Object.entries(words_mem).sort((a,b) => a[1] > b[1] ? -1 : 1)) {
+      for (let score of Object.entries(mem).sort((a,b) => a[1] > b[1] ? -1 : 1)) {
          scoreboard += score[1]
             .toString()
             .padStart(padding,' ')
@@ -140,14 +140,14 @@ module.exports = async ctx => {
 
             for (let player in scores) {
                let pts = vals(scores[player])
-               let hi = words_mem[player] || 0
+               let hi = mem[player] || 0
                if (pts > hi) {
-                  words_mem[player] = pts
+                  mem[player] = pts
                   ctx.reply(player + ' ⭐️ hi score!')
                }
             }
 
-            bot.mem.save('words', words_mem)
+            bot.mem.save('words', mem)
 
             let scoreboard = ''
 
