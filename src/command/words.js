@@ -22,8 +22,8 @@ alphabet = alphabet
 let vowels = ['A','E','I','O','U']
 
 let w = '' // letters
-let scores // game score
-let done = [] // scored words
+let scores = {} // scored words
+let done = () => Object.values(scores).reduce((a,b) => a.concat(b), []) // scored words
 let words_mem = bot.mem.load('words') // hi scores
 let called = { time: 0, caller: null, duration: null } // last call
 let gap = 16 // time buffer
@@ -36,16 +36,14 @@ module.exports = async ctx => {
    if (query === 'top') { // hi scores
 
       let scoreboard = ''
-      // right alignment
-      let score_pad = Object.values(words_mem)
-         .reduce((a,b) => a.toString().length > b.toString().length ? a : b, 0)
-         .toString()
-         .length
+
+      let padding = pad(words.mem)
 
       for (let score of Object.entries(words_mem).sort((a,b) => a[1] > b[1] ? -1 : 1)) {
          scoreboard += score[1]
             .toString()
-            .padStart(score_pad,' ') + ' ' + score[0] + '\n'
+            .padStart(padding,' ')
+            + ' ' + score[0] + '\n'
       }
 
       ctx.replyWithHTML('<b>HI SCORES!</b>\n\n'
@@ -90,8 +88,7 @@ module.exports = async ctx => {
 
       // reset global variables
 
-      scores = new Map()
-      done = []
+      scores = {}
       w = ''
 
       // create puzzle
@@ -119,19 +116,18 @@ module.exports = async ctx => {
 
       bot.on('message', async ctx => {
 
-         let p = (ctx.message?.text || '').toUpperCase()
-
          if (w) {
             bot.telegram.deleteMessage(ctx.message.chat.id,ctx.message.message_id)
          }
 
-         if (Date.now() - called.time < called.duration && valid(p)) {
-            done.push(p)
+         let p = (ctx.message?.text || '').toUpperCase()
+         let caller = await util.title(ctx)
+
+         if (Date.now() - called.time < called.duration && valid(p, caller)) {
             console.info(p, 'valid')
-            let caller = await util.title(ctx)
-            if (!scores.has(caller)) scores.set(caller,0)
-            scores.set(caller, scores.get(caller) + val(p))
-            ctx.replyWithHTML('<code>' + p + '</code> <b>' + caller + ' ' + val(p) + '!</b>')
+            if (!scores[caller]) scores[caller] = []
+            scores[caller].push(p)
+            ctx.replyWithHTML(caller + ' <b>' + val(p) + '!</b>')
          }
 
       })
@@ -140,24 +136,46 @@ module.exports = async ctx => {
 
       setTimeout(() => {
 
-         if (done.length) {
+         if (Object.values(scores).length) {
 
-            for (let score of scores) {
-               let s = score[1]
-               let h = words_mem[score[0]] || 0
-               if (s > h) {
-                  words_mem[score[0]] = s
-                  ctx.reply(score[0] + ' ⭐️ hi score!')
+            for (let player in scores) {
+               let pts = vals(scores[player])
+               let hi = words_mem[player] || 0
+               if (pts > hi) {
+                  words_mem[player] = pts
+                  ctx.reply(player + ' ⭐️ hi score!')
                }
             }
 
             bot.mem.save('words', words_mem)
+
             let scoreboard = ''
-            let score_pad = Object.values(scores).reduce((a,b) => a.toString().length > b.toString().length ? a : b, 0).toString().length
-            for (let score of [...scores].sort((a,b) => a[1] > b[1] ? -1 : 1)) {
-               scoreboard += score[1].toString().padStart(score_pad,' ')
+
+            let scores_vals = {}
+
+            for (let player in scores) {
+               scores_vals[player] = vals(scores[player])
+            }
+
+            let padding = pad(scores_vals)
+
+            for (let score of Object.entries(scores_vals).sort((a,b) => a[1] > b[1] ? -1 : 1)) {
+               scoreboard += score[1]
+                  .toString()
+                  .padStart(padding,' ')
                   + ' ' + score[0] + '\n'
             }
+
+            scoreboard += '\n-'
+
+            for (let score of Object.entries(scores).sort((a,b) => a[1] > b[1] ? -1 : 1)) {
+               scoreboard += '\n\n' + score[0] + ':'
+               for (let word of score[1].sort((a,b) => val(a) > val(b) ? -1 : 1)) {
+                  scoreboard += ' ' + word
+               }
+
+            }
+
             ctx.replyWithHTML('<b>ACABOU!</b>\n\n'
                + '<code>' + scoreboard + '</code>')
 
@@ -183,10 +201,14 @@ module.exports = async ctx => {
 // point system
 
 let val = p => 2 ** (p.length - 5) // point system
+let vals = arr => arr.map(x => val(x)).reduce((a,b) => a + b, 0)
 
 // word validation
 
-let valid = p => {
+let valid = (p, caller) => {
+
+   //let done = scores?.[caller] || []
+   let done = done()
 
    if (p.length < 5
       || done.includes(p)
@@ -195,21 +217,29 @@ let valid = p => {
       || !dict.has(p)
    ) return false
 
-   let m = new Map()
+   let c = {}
    let ww = [...w]
 
    while (x = ww.pop()) {
-      m.set(x,m.has(x) ? m.get(x) + 1 : 1)
+      c[x] = ++ c[x] || 1
    }
 
    let pp = [...p]
 
    while (x = pp.pop()) {
-      if (!m.get(x)) return false
-      m.set(x,m.get(x) - 1)
+      if (!c[x]) return false
+      c[x] --
    }
 
    return true
 
 }
 
+// padding
+
+let pad = o => {
+   return Object.values(o)
+      .reduce((a,b) => a.toString().length > b.toString().length ? a : b, 0)
+      .toString()
+      .length
+}
