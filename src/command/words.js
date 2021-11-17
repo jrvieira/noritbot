@@ -106,7 +106,7 @@ module.exports = async ctx => {
             let caller = await util.title(ctx)
             if (!scores.has(caller)) scores.set(caller,0)
             scores.set(caller, scores.get(caller) + val(p))
-            ctx.replyWithHTML('<b>' + p + '!</b> ' + caller + ' ' + scores.get(caller))
+            ctx.replyWithHTML('<code>' + p + '</code> <b>' + caller + ' ' + scores.get(caller) + '!</b>')
          }
 
       })
