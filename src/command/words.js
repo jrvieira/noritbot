@@ -25,7 +25,8 @@ let w = '' // letters
 let scores // game score
 let done = [] // scored words
 let words_mem = bot.mem.load('words') // hi scores
-let called = { time: 0, caller: null } // for a game to start it needs two requests at most 16 seconds apart
+let called = { time: 0, caller: null, duration: null } // last call
+let gap = 16 // time buffer
 
 module.exports = async ctx => {
 
@@ -55,19 +56,33 @@ module.exports = async ctx => {
 
       ctx.replyWithHTML('<code>' + [...w].join(' ') + '</code>')
 
-   } else if (!query || !isNaN(query)) { // let's roll
+   } else if (!query
+      || +query === Math.round(query)
+      && query >= gap
+      && query <= 120
+   ) {
 
-      // call and check if game is called
+      // call
 
       let caller = await util.title(ctx)
 
-      if (caller === called.caller || Date.now() - called.time > 16 * 1000) {
-         called = { time: Date.now() , caller: caller }
+      let call = (d) => {
+         called = {
+            time: Date.now(),
+            caller: caller,
+            duration: d || (query ? query * 1000 : 60 * 1000)
+         }
+      }
+
+      if (caller === called.caller || Date.now() - called.time > gap * 1000) {
+         call()
          console.info(caller + ' challanged /words...')
          return null
       }
 
-      called = { time: Date.now() , caller: caller }
+      // if within gap, call the game with challenger's duration
+
+      call(called.duration)
 
       // delete second call command
 
@@ -79,11 +94,6 @@ module.exports = async ctx => {
       done = []
       w = ''
 
-      // set local variables
-
-      let duration = 60 * 1000 // default
-      duration = query ? query * 1000 : duration
-
       // create puzzle
 
       while (w.length < 16) {
@@ -94,7 +104,7 @@ module.exports = async ctx => {
 
       let pin = await bot.telegram.sendMessage(
          ctx.message.chat.id,
-         '<b>WORDS!</b> ' + duration / 1000 + 's\n\n'
+         '<b>WORDS!</b> ' + called.duration / 1000 + 's\n\n'
             + '<code>' + [...w].join(' ') + '</code>',
          { parse_mode: 'HTML' }
       )
@@ -115,7 +125,7 @@ module.exports = async ctx => {
             bot.telegram.deleteMessage(ctx.message.chat.id,ctx.message.message_id)
          }
 
-         if (Date.now() - called.time < duration && valid(p)) {
+         if (Date.now() - called.time < called.duration && valid(p)) {
             done.push(p)
             console.info(p, 'valid')
             let caller = await util.title(ctx)
@@ -164,7 +174,7 @@ module.exports = async ctx => {
             { message_id: pin.message_id }
          )
 
-      }, duration)
+      }, called.duration)
 
    }
 
