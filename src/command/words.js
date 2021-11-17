@@ -118,7 +118,7 @@ module.exports = async ctx => {
          if (Date.now() - called.time < duration && valid(p)) {
             done.push(p)
             console.info(p, 'valid')
-            let caller = util.title(ctx)
+            let caller = await util.title(ctx)
             if (!scores.has(caller)) scores.set(caller,0)
             scores.set(caller, scores.get(caller) + val(p))
             ctx.replyWithHTML('<code>' + p + '</code> <b>' + caller + ' ' + val(p) + '!</b>')
