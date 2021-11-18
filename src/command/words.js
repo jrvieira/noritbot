@@ -200,34 +200,32 @@ module.exports = async ctx => {
 
 // point system
 
-let val = p => 2 ** (p.length - 6) // point system
-let vals = arr => arr.map(x => val(x)).reduce((a,b) => a + b, 0)
+let val = p => 2 ** (p.length - 6) // word value
+let vals = arr => arr.map(x => val(x)).reduce((a,b) => a + b, 0) // total
 
 // word validation
 
 let valid = (p, caller) => {
 
-   //let done = scores?.[caller] || [] // own scored words
-   let done = Object.values(scores).reduce((a,b) => a.concat(b), []) // *everyone's* scored words
+// let done = scores?.[caller] || [] // own
+   let done = Object.values(scores).reduce((a,b) => a.concat(b), []) // all
 
    if (p.length < 6
-      || done.includes(p)
-      || done.includes(p + 'S')
-      || (p.slice(-1) === 'S' && done.some(x => p === x + 'S'))
-   // || (p.slice(-1) === 'O' && done.some(x => p.slice(0,-1) + 'A' === x))
-   // || (p.slice(-1) === 'A' && done.some(x => p.slice(0,-1) + 'O' === x))
+      || done.includes(p) // done
+      || done.includes(p + 'S') // singular
+      || (p.slice(-1) === 'S' && done.some(x => p === x + 'S')) // plural
+   // || (p.slice(-1) === 'O' && done.some(x => p.slice(0,-1) + 'A' === x)) // masculine
+   // || (p.slice(-1) === 'A' && done.some(x => p.slice(0,-1) + 'O' === x)) // feminine
+      || done.some(x => p.slice(0,5) === x.slice(0,5)) // same root ~
       || !dict.has(p)
    ) return false
 
    let c = {}
    let ww = [...w]
-
    while (x = ww.pop()) {
       c[x] = ++ c[x] || 1
    }
-
    let pp = [...p]
-
    while (x = pp.pop()) {
       if (!c[x]) return false
       c[x] --
