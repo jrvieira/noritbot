@@ -1,12 +1,10 @@
 const bot = require('./core')
 
-// basic stuff
-require('./command/oi')()
+bot.command('words'    , require('./command/words')          )
 
 bot.command('remind'   , require('./command/remind')         )
 bot.command('etqlccm'  , require('./command/etqlccm')        )
 bot.command('etdlccm'  , require('./command/etqlccm')        )
-bot.command('words'    , require('./command/words')          )
 bot.command('beer'     , require('./command/beer')           )
 bot.command('quote'    , require('./command/quote')          )
 bot.command('js'       , require('./command/eval').javascript)
@@ -19,6 +17,8 @@ bot.command('aoc_score', require('./command/aoc').leaderboard)
 bot.command('aoc_times', require('./command/aoc').times      )
 bot.command('horoscope', require('./command/zodiac')         )
 bot.command('horoscopo', require('./command/zodiac')         )
+
+require('./command/oi')() // basic stuff
 
 // launch
 
