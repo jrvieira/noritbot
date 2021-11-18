@@ -1,7 +1,6 @@
 const bot = require('./core')
 
 bot.command('words'    , require('./command/words')          )
-
 bot.command('remind'   , require('./command/remind')         )
 bot.command('etqlccm'  , require('./command/etqlccm')        )
 bot.command('etdlccm'  , require('./command/etqlccm')        )

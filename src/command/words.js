@@ -51,7 +51,8 @@ module.exports = async ctx => {
 
    } else if (w) { // game is currently being played
 
-      ctx.replyWithHTML('<code>' + [...w].join(' ') + '</code>')
+      //ctx.replyWithHTML('<code>' + [...w].join(' ') + '</code>')
+      bot.telegram.deleteMessage(ctx.message.chat.id,ctx.message.message_id)
 
    } else if (!query
       || +query === Math.round(query)
