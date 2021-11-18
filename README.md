@@ -19,7 +19,7 @@ https://core.telegram.org/bots/api
 - [x] karma
 - [ ] splitwise
 - [x] citações
-- [ ] frases motivacionais 
+- [ ] frases motivacionais
 - [ ] daily facts
 - [ ] coisas com [botões](https://stackoverflow.com/questions/57330756/telegraf-unable-to-use-markdown-style-in-reply-with-inlinebuttons)
 - [ ] Keel Simulator (corretor ortográfico)
@@ -29,3 +29,4 @@ https://core.telegram.org/bots/api
 - [x] interpretador de código (js/hs/py)
 - [x] wolfram alpha
 - [x] horoscopo
+- [x] word game
