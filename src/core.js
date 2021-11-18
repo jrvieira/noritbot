@@ -6,6 +6,7 @@ const bot = module.exports = new Telegraf(process.argv[2])
 // JSON memory data management
 
 bot.mem = {
+
    load (db) {
       let r
       try {
@@ -18,6 +19,7 @@ bot.mem = {
          return r
       }
    },
+
    save (db, data) {
       try {
          jlast.save('mem/' + db + '.json', data)
@@ -27,5 +29,6 @@ bot.mem = {
          console.info(db + ' updated')
       }
    }
+
 }
 
