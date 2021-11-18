@@ -22,6 +22,8 @@ alphabet = alphabet
 let vowels = ['A','E','I','O','U']
 
 let w = '' // letters
+let wn = 16 // number of letters
+let min = 6 // minimum word length
 let scores = {} // scored words
 let mem = bot.mem.load('words') // hi scores
 let called = { time: 0, caller: null, duration: null } // last call
@@ -93,8 +95,8 @@ module.exports = async ctx => {
 
       // create puzzle
 
-      while (w.length < 16) {
-         w += util.random(w.length % 6 ? alphabet : vowels)
+      while (w.length < wn) {
+         w += util.random(util.maybe(1/6) ? vowels : alphabet)
       }
 
       // start the game
@@ -200,7 +202,7 @@ module.exports = async ctx => {
 
 // point system
 
-let val = p => 2 ** (p.length - 6) // word value
+let val = p => 2 ** (p.length - min) // word value
 let vals = arr => arr.map(x => val(x)).reduce((a,b) => a + b, 0) // total
 
 // word validation
@@ -210,13 +212,13 @@ let valid = (p, caller) => {
 // let done = scores?.[caller] || [] // own
    let done = Object.values(scores).reduce((a,b) => a.concat(b), []) // all
 
-   if (p.length < 6
+   if (p.length < min
       || done.includes(p) // done
       || done.includes(p + 'S') // singular
       || (p.slice(-1) === 'S' && done.some(x => p === x + 'S')) // plural
    // || (p.slice(-1) === 'O' && done.some(x => p.slice(0,-1) + 'A' === x)) // masculine
    // || (p.slice(-1) === 'A' && done.some(x => p.slice(0,-1) + 'O' === x)) // feminine
-      || done.some(x => p.slice(0,5) === x.slice(0,5)) // same root ~
+      || done.some(x => p.slice(0,min - 1) === x.slice(0,min - 1)) // same root ~
       || !dict.has(p)
    ) return false
 
