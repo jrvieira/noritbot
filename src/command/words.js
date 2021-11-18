@@ -199,7 +199,7 @@ module.exports = async ctx => {
 
 // point system
 
-let val = p => 2 ** (p.length - 5) // point system
+let val = p => 2 ** (p.length - 6) // point system
 let vals = arr => arr.map(x => val(x)).reduce((a,b) => a + b, 0)
 
 // word validation
@@ -209,10 +209,12 @@ let valid = (p, caller) => {
    //let done = scores?.[caller] || [] // own scored words
    let done = Object.values(scores).reduce((a,b) => a.concat(b), []) // *everyone's* scored words
 
-   if (p.length < 5
+   if (p.length < 6
       || done.includes(p)
       || done.includes(p + 'S')
-      || (p.substr(-1) === 'S' && done.some(x => p === x + 'S'))
+      || (p.slice(-1) === 'S' && done.some(x => p === x + 'S'))
+   // || (p.slice(-1) === 'O' && done.some(x => p.slice(0,-1) + 'A' === x))
+   // || (p.slice(-1) === 'A' && done.some(x => p.slice(0,-1) + 'O' === x))
       || !dict.has(p)
    ) return false
 
