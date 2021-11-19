@@ -3,6 +3,13 @@ const jlast = require('jlast')
 
 const bot = module.exports = new Telegraf(process.argv[2])
 
+// channels
+
+bot.chn = {
+   prod: -1001245137014,
+   dev: -1001589480265
+}
+
 // JSON memory data management
 
 bot.mem = {

@@ -70,9 +70,9 @@ module.exports = () => {
       if (horas !== countdown && horas > -1) {
          countdown = horas
          if (horas < 48) {
-            bot.telegram.setChatTitle(-1001245137014, horas + (horas === 1 ? ' hora 🤍' : ' horas 🤍'))
+            bot.telegram.setChatTitle(bot.chn.prod, horas + (horas === 1 ? ' hora 🤍' : ' horas 🤍'))
          } else if (horas % 24 === 0) {
-            bot.telegram.setChatTitle(-1001245137014, (horas / 24) + ' dias 🤍')
+            bot.telegram.setChatTitle(bot.chn.prod, (horas / 24) + ' dias 🤍')
          }
       }
 

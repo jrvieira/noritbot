@@ -20,7 +20,7 @@ while (i >= 65) alphabet.push(i--)
 alphabet = alphabet
    .map(x => String.fromCharCode(x))
    .filter(x => !['K','W','Y'].includes(x))
-   .push(wildcard)
+alphabet.push(wildcard)
 let vowels = ['A','E','I','O','U']
 
 let w = '' // letters
@@ -81,6 +81,7 @@ module.exports = async ctx => {
          console.info(caller + ' challanged /words...')
          return null
       }
+      console.info(caller + ' accepted!')
 
       // if within gap, call the game with challenger's duration
 
