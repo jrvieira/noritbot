@@ -42,7 +42,6 @@ module.exports = async ctx => {
       let scoreboard = ''
 
       let padding = pad(mem)
-
       for (let score of Object.entries(mem).sort((a,b) => a[1] > b[1] ? -1 : 1)) {
          scoreboard += score[1]
             .toString()
@@ -158,7 +157,6 @@ module.exports = async ctx => {
             bot.mem.save('words', mem)
 
             let scoreboard = ''
-
             let scores_vals = {}
 
             for (let player in scores) {
@@ -166,7 +164,6 @@ module.exports = async ctx => {
             }
 
             let padding = pad(scores_vals)
-
             for (let score of Object.entries(scores_vals).sort((a,b) => a[1] > b[1] ? -1 : 1)) {
                scoreboard += score[1]
                   .toString()
