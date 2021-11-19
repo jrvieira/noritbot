@@ -47,26 +47,27 @@ module.exports = () => {
    let azia = a => {
       let t = bot.stt.azia + a
       bot.stt.azia = t > 10 ? 10 : t < 0 ? 0 : Math.round(t)
-      console.info('azia =',bot.stt.azia)
+      console.info('azia =', bot.stt.azia)
    }
 
-   bot.command('azia', ctx => ctx.reply(util.title(ctx) + ' ' + bot.stt.azia))
-   bot.command('azia+', _ => azia(+1))
-   bot.command('azia-', _ => azia(-1))
+   bot.command('azia', ctx => ctx.reply('azia: ' + bot.stt.azia))
 
-   bot.hears(/fds/,     _ => azia(+1))
-   bot.hears(/foda/,     _ => azia(+1))
-   bot.hears(/mal/,     _ => azia(+1))
+   bot.hears('vou almoçar', _ => azia(+1))
+   bot.hears(/fds/,         _ => azia(+1))
+   bot.hears(/foda/,        _ => azia(+1))
+   bot.hears(/mal/,         _ => azia(+1))
    bot.hears(/\s+azia/,     _ => azia(+1))
-   bot.hears(/crl/,     _ => azia(+1))
-   bot.hears(/merda/,   _ => azia(+1))
-   bot.hears(/covid/,   _ => azia(+1))
+   bot.hears(/crl/,         _ => azia(+1))
+   bot.hears(/merda/,       _ => azia(+1))
+   bot.hears(/covid/,       _ => azia(+1))
 
-   bot.hears(/(^|\s)ami/,     _ => azia(-1))
-   bot.hears(/bom/,     _ => azia(-1))
-   bot.hears(/boa/,     _ => azia(-1))
-   bot.hears(/bonito/,  _ => azia(-1))
-   bot.hears(/lindo/,   _ => azia(-1))
+   bot.hears('calma',       _ => azia(-1))
+   bot.hears(/(^|\s)ami/,   _ => azia(-1))
+   bot.hears(/bom/,         _ => azia(-1))
+   bot.hears(/boa/,         _ => azia(-1))
+   bot.hears(/bonito/,      _ => azia(-1))
+   bot.hears(/lindo/,       _ => azia(-1))
+   bot.hears(/:)/,          _ => azia(-1))
 
    let fns_t = 0
 
