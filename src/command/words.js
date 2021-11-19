@@ -13,15 +13,18 @@ fs.readFile('mem/words.txt', 'utf8', function (err, data) {
 
 // initialize global variables
 
+let wildcard = '_'
 let alphabet = []
 let i = 90
 while (i >= 65) alphabet.push(i--)
 alphabet = alphabet
    .map(x => String.fromCharCode(x))
    .filter(x => !['K','W','Y'].includes(x))
+   .push(wildcard)
 let vowels = ['A','E','I','O','U']
 
 let w = '' // letters
+let wmap = {}
 let wn = 16 // number of letters
 let min = 6 // minimum word length
 let scores = {} // scored words
@@ -92,11 +95,14 @@ module.exports = async ctx => {
 
       scores = {}
       w = ''
+      wmap = {}
 
       // create puzzle
 
       while (w.length < wn) {
-         w += util.random(util.maybe(1/6) ? vowels : alphabet)
+         let letter = util.random(util.maybe(1/6) ? vowels : alphabet)
+         wmap[letter] = ++ wmap[letter] || 1
+         w += letter
       }
 
       // start the game
@@ -188,6 +194,7 @@ module.exports = async ctx => {
          // reset
 
          w = ''
+         wmap = {}
 
          bot.telegram.unpinChatMessage(
             ctx.message.chat.id,
@@ -209,7 +216,7 @@ let vals = arr => arr.map(x => val(x)).reduce((a,b) => a + b, 0) // total
 
 let valid = (p, caller) => {
 
-// let done = scores?.[caller] || [] // own
+   // let done = scores?.[caller] || [] // own
    let done = Object.values(scores).reduce((a,b) => a.concat(b), []) // all
 
    if (p.length < min
@@ -218,19 +225,20 @@ let valid = (p, caller) => {
       || (p.slice(-1) === 'S' && done.some(x => p === x + 'S')) // plural
    // || (p.slice(-1) === 'O' && done.some(x => p.slice(0,-1) + 'A' === x)) // masculine
    // || (p.slice(-1) === 'A' && done.some(x => p.slice(0,-1) + 'O' === x)) // feminine
-      || done.some(x => p.slice(0,min - 1) === x.slice(0,min - 1)) // same root ~
+   // || done.some(x => p.slice(0,min - 1) === x.slice(0,min - 1)) // same root ~
       || !dict.has(p)
    ) return false
 
-   let c = {}
-   let ww = [...w]
-   while (x = ww.pop()) {
-      c[x] = ++ c[x] || 1
-   }
+   let m = Object.assign({},wmap)
    let pp = [...p]
    while (x = pp.pop()) {
-      if (!c[x]) return false
-      c[x] --
+      if (m[x]) {
+         m[x] --
+      } else if (m[wildcard]) {
+         m[wildcard] --
+      } else {
+         return false
+      }
    }
 
    return true
