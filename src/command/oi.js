@@ -67,7 +67,7 @@ module.exports = () => {
    bot.hears(/boa/,         _ => azia(-1))
    bot.hears(/bonito/,      _ => azia(-1))
    bot.hears(/lindo/,       _ => azia(-1))
-   bot.hears(/:)/,          _ => azia(-1))
+   bot.hears(/:\)/,          _ => azia(-1))
 
    let fns_t = 0
 
