@@ -83,6 +83,10 @@ module.exports = async ctx => {
       }
       console.info(caller + ' accepted!')
 
+      // initialize the game
+
+      bot.stt.busy = true
+
       // if within gap, call the game with challenger's duration
 
       call(called.duration)
@@ -190,6 +194,8 @@ module.exports = async ctx => {
          }
 
          // reset
+
+         bot.stt.busy = false
 
          w = ''
          wmap = {}

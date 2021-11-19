@@ -10,6 +10,13 @@ bot.chn = {
    dev: -1001589480265
 }
 
+// state
+
+bot.stt = {
+   azia: 0,
+   busy: false,
+}
+
 // JSON memory data management
 
 bot.mem = {

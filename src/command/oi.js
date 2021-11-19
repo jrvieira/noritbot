@@ -5,7 +5,7 @@ module.exports = () => {
 
    // oi
 
-   bot.hears(/^[Oo]+i+[\s\?]*.*$/, ctx => oi() ? ctx.reply('oi?') : null)
+   bot.hears(/^[Oo]+i+[\s\?]*.*$/, ctx => !bot.stt.busy && oi() ? ctx.reply('oi?') : null)
 
    let oi_t = 0
    let oi_n = 0
@@ -22,6 +22,8 @@ module.exports = () => {
    // pessoas
 
    bot.command('pessoas', async ctx => {
+
+      if (bot.stt.busy) return null
 
       let r
       try {
@@ -42,6 +44,30 @@ module.exports = () => {
 
    // azia artificial
 
+   let azia = a => {
+      let t = bot.stt.azia + a
+      bot.stt.azia = t > 10 ? 10 : t < 0 ? 0 : Math.round(t)
+      console.info('azia =',bot.stt.azia)
+   }
+
+   bot.command('azia', ctx => ctx.reply(util.title(ctx) + ' ' + bot.stt.azia))
+   bot.command('azia+', _ => azia(+1))
+   bot.command('azia-', _ => azia(-1))
+
+   bot.hears(/fds/,     _ => azia(+1))
+   bot.hears(/foda/,     _ => azia(+1))
+   bot.hears(/mal/,     _ => azia(+1))
+   bot.hears(/\s+azia/,     _ => azia(+1))
+   bot.hears(/crl/,     _ => azia(+1))
+   bot.hears(/merda/,   _ => azia(+1))
+   bot.hears(/covid/,   _ => azia(+1))
+
+   bot.hears(/(^|\s)ami/,     _ => azia(-1))
+   bot.hears(/bom/,     _ => azia(-1))
+   bot.hears(/boa/,     _ => azia(-1))
+   bot.hears(/bonito/,  _ => azia(-1))
+   bot.hears(/lindo/,   _ => azia(-1))
+
    let fns_t = 0
 
    function fns_cooldown () {
@@ -52,12 +78,13 @@ module.exports = () => {
       }
    }
 
-   bot.hears('fds', ctx => fns_cooldown() && util.maybe(.1) ? ctx.reply('fns') : null)
-   bot.hears(/\s+merda\s*/, ctx => fns_cooldown() && util.maybe(.1) ? ctx.replyWithHTML('é tudo uma <b>merda</b>') : null)
-   bot.hears(/\s+covid\s*/, ctx => fns_cooldown() && util.maybe(.1) ? ctx.reply('🇸🇪') : null)
-   bot.hears(/\s+@*norit\s*/, ctx => fns_cooldown() && util.maybe(.1) ? ctx.reply('ETDLCCM') : null)
-   bot.hears(/\s*ETQLCCM\s*/, ctx => fns_cooldown() && util.maybe(.1) ? ctx.reply('*ETDLCCM') : null)
-   bot.hears(/\s*:\)\s*/, ctx => fns_cooldown() && util.maybe(.1) ? ctx.reply('👆👉') : null)
+   bot.hears('fds',           ctx => !bot.stt.busy && fns_cooldown() && util.maybe(bot.stt.azia/10) ? ctx.reply('fns') : null)
+   bot.hears(/\s+merda\s*/,   ctx => !bot.stt.busy && fns_cooldown() && util.maybe(bot.stt.azia/10) ? ctx.replyWithHTML('é tudo uma <b>merda</b>') : null)
+   bot.hears(/\s+covid\s*/,   ctx => !bot.stt.busy && fns_cooldown() && util.maybe(bot.stt.azia/10) ? ctx.reply('🇸🇪') : null)
+   bot.hears(/\s+@*norit\s*/, ctx => !bot.stt.busy && fns_cooldown() && util.maybe(bot.stt.azia/10) ? ctx.reply('ETDLCCM') : null)
+   bot.hears(/\s*ETQLCCM\s*/, ctx => !bot.stt.busy                   && util.maybe(bot.stt.azia/10) ? ctx.reply('*ETDLCCM') : null)
+   bot.hears(/\s*:\)\s*/,     ctx => !bot.stt.busy && fns_cooldown() && util.maybe(bot.stt.azia/10) ? ctx.reply('👆👉') : null)
+   bot.hears(/aha/,           ctx => !bot.stt.busy && fns_cooldown() && util.maybe(bot.stt.azia/10) ? ctx.reply(Math.round(Math.random()*10)+'/10') : null)
 
    // countdown
 
