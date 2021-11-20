@@ -94,14 +94,22 @@ module.exports = () => {
 
    setInterval(() => {
 
-      let horas = Math.ceil((countdown_target  - Date.now()) / 1000 / 60 / 60)
-      if (horas !== countdown && horas > -1) {
-         countdown = horas
-         if (horas < 48) {
-            bot.telegram.setChatTitle(bot.chn.prod, horas + (horas === 1 ? ' hora 🤍' : ' horas 🤍'))
-         } else if (horas % 24 === 0) {
-            bot.telegram.setChatTitle(bot.chn.prod, (horas / 24) + ' dias 🤍')
+      try {
+
+         let horas = Math.ceil((countdown_target  - Date.now()) / 1000 / 60 / 60)
+         if (horas !== countdown && horas > -1) {
+            countdown = horas
+            if (horas < 48) {
+               bot.telegram.setChatTitle(bot.chn.prod, horas + (horas === 1 ? ' hora 🤍' : ' horas 🤍'))
+            } else if (horas % 24 === 0) {
+               bot.telegram.setChatTitle(bot.chn.prod, (horas / 24) + ' dias 🤍')
+            }
          }
+
+      } catch (err) {
+
+         return null
+
       }
 
    }, 1000*60)
