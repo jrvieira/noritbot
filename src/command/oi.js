@@ -52,22 +52,22 @@ module.exports = () => {
 
    bot.command('azia', ctx => ctx.reply('azia: ' + bot.stt.azia))
 
-   bot.hears('vou almoçar', _ => azia(+1))
-   bot.hears(/fds/,         _ => azia(+1))
-   bot.hears(/foda/,        _ => azia(+1))
-   bot.hears(/mal/,         _ => azia(+1))
-   bot.hears(/\s+azia/,     _ => azia(+1))
-   bot.hears(/crl/,         _ => azia(+1))
-   bot.hears(/merda/,       _ => azia(+1))
-   bot.hears(/covid/,       _ => azia(+1))
+   bot.hears('vou almoçar', _ => !bot.stt.busy ? azia(+1) : null)
+   bot.hears(/fds/,         _ => !bot.stt.busy ? azia(+1) : null)
+   bot.hears(/foda/,        _ => !bot.stt.busy ? azia(+1) : null)
+   bot.hears(/mal/,         _ => !bot.stt.busy ? azia(+1) : null)
+   bot.hears(/\s+azia/,     _ => !bot.stt.busy ? azia(+1) : null)
+   bot.hears(/crl/,         _ => !bot.stt.busy ? azia(+1) : null)
+   bot.hears(/merda/,       _ => !bot.stt.busy ? azia(+1) : null)
+   bot.hears(/covid/,       _ => !bot.stt.busy ? azia(+1) : null)
 
-   bot.hears('calma',       _ => azia(-1))
-   bot.hears(/(^|\s)ami/,   _ => azia(-1))
-   bot.hears(/bom/,         _ => azia(-1))
-   bot.hears(/boa/,         _ => azia(-1))
-   bot.hears(/bonito/,      _ => azia(-1))
-   bot.hears(/lindo/,       _ => azia(-1))
-   bot.hears(/:\)/,          _ => azia(-1))
+   bot.hears('calma',       _ => !bot.stt.busy ? azia(-1) : null)
+   bot.hears(/(^|\s)ami/,   _ => !bot.stt.busy ? azia(-1) : null)
+   bot.hears(/bom/,         _ => !bot.stt.busy ? azia(-1) : null)
+   bot.hears(/boa/,         _ => !bot.stt.busy ? azia(-1) : null)
+   bot.hears(/bonito/,      _ => !bot.stt.busy ? azia(-1) : null)
+   bot.hears(/lindo/,       _ => !bot.stt.busy ? azia(-1) : null)
+   bot.hears(/:\)/,         _ => !bot.stt.busy ? azia(-1) : null)
 
    let fns_t = 0
 

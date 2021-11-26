@@ -34,6 +34,15 @@ let gap = 16 // time buffer
 
 module.exports = async ctx => {
 
+   // deactivate /words on main channel
+   if (ctx.message.chat.id == bot.chn.prod) {
+      bot.telegram.deleteMessage(ctx.message.chat.id,ctx.message.message_id)
+      let caller = await util.title(ctx)
+      let reply = await ctx.reply(caller + ': /words desativado neste canal')
+      setTimeout(() => bot.telegram.deleteMessage(ctx.message.chat.id,reply.message_id), 6000)
+      return null
+   }
+
    // command arguments
    let query = ctx.message.text.split(' ').slice(1).join(' ')
 
@@ -53,7 +62,7 @@ module.exports = async ctx => {
          + '<code>' + scoreboard + '</code>'
       )
 
-   } else if (w) { // game is currently being played
+   } else if (bot.stt.busy) { // bot i busy (ex: game is being played)
 
       //ctx.replyWithHTML('<code>' + [...w].join(' ') + '</code>')
       bot.telegram.deleteMessage(ctx.message.chat.id,ctx.message.message_id)
@@ -129,7 +138,7 @@ module.exports = async ctx => {
       bot.on('message', async ctx => {
 
          if (w) {
-            bot.telegram.deleteMessage(ctx.message.chat.id,ctx.message.message_id)
+            setTimeout(() => bot.telegram.deleteMessage(ctx.message.chat.id,ctx.message.message_id), 1000)
          }
 
          let p = (ctx.message?.text || '').toUpperCase()
