@@ -79,7 +79,7 @@ let run = (ctx, data) => {
          echo += '\n'
          echo += completed.day == 25 ? '!!' : ''.padEnd(completed.part,'*').padStart(2,' ')
          echo += ' '
-         echo += [...completed.time].filter(x => x != ',').join('')
+         echo += [...completed.time].filter(x => x != ',').join('').split(' ').reverse().join(' ')
          echo += '\n\n'
       }
 
