@@ -68,7 +68,7 @@ let run = (ctx, data) => {
 
       let completed = {
          day: Math.ceil(m.stars/2),
-         part: m.stars % 2 + 1,
+         part: (m.stars - 1) % 2 + 1,
          time: new Intl.DateTimeFormat("pt-PT",fmt).format(new Date(+m.last_star_ts*1000))
       }
 
