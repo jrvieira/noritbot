@@ -2,6 +2,8 @@ const bot = require('../core')
 const util = require('../util')
 const { exec } = require('child_process')
 
+let wa_appid = bot.mem.load('env').wa_appid
+
 module.exports = {
 
    wa: async ctx => {
@@ -12,7 +14,7 @@ module.exports = {
       if (!query) return null
 
       let comm = `curl -s -G 'https://api.wolframalpha.com/v1/result' \
--d appid=9AUKAU-L9KJ7YX5KV \
+-d appid=${wa_appid} \
 -d input=${encodeURI(query)} \
 -d units=metric \
 -d latlong=41.15,8.62 \
@@ -42,7 +44,7 @@ module.exports = {
       let query = ctx.message.text.split(' ').slice(1).join(' ')
       if (!query) return null
       console.info('wi query:', query)
-      ctx.replyWithHTML(await util.title(ctx) + ': <a href="https://api.wolframalpha.com/v1/simple?appid=9AUKAU-L9KJ7YX5KV&layout=labelbar&units=metric&i=' + query + '">' + query + '</a>')
+      ctx.replyWithHTML(await util.title(ctx) + ': <a href="https://api.wolframalpha.com/v1/simple?appid='+wa_appid+'&layout=labelbar&units=metric&i=' + query + '">' + query + '</a>')
 
    }
 

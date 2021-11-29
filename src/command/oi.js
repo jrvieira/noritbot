@@ -112,8 +112,6 @@ module.exports = () => {
 
       }
 
-   }, 1000*60)
-
-   console.info('oi')
+   }, 60*1000)
 
 }
