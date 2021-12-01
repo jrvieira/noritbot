@@ -87,31 +87,4 @@ module.exports = () => {
    bot.hears(/\s*:\)\s*/,     ctx => !bot.stt.busy && fns_cooldown() && util.maybe(bot.stt.azia/10) ? ctx.reply('👆👉') : null)
    bot.hears(/aha/,           ctx => !bot.stt.busy && fns_cooldown() && util.maybe(bot.stt.azia/10) ? ctx.reply(Math.round(Math.random()*10)+'/10') : null)
 
-   // countdown
-
-   let countdown_target = 1638316800000
-   let countdown = 0
-
-   setInterval(() => {
-
-      try {
-
-         let horas = Math.ceil((countdown_target  - Date.now()) / 1000 / 60 / 60)
-         if (horas !== countdown && horas > -1) {
-            countdown = horas
-            if (horas < 48) {
-               bot.telegram.setChatTitle(bot.chn.prod, horas + (horas === 1 ? ' hora 🤍' : ' horas 🤍'))
-            } else if (horas % 24 === 0) {
-               bot.telegram.setChatTitle(bot.chn.prod, (horas / 24) + ' dias 🤍')
-            }
-         }
-
-      } catch (err) {
-
-         return null
-
-      }
-
-   }, 60*1000)
-
 }
