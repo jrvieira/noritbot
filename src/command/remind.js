@@ -76,7 +76,7 @@ module.exports = async ctx => {
 
    function runReply () {
       //ctx.telegram.sendMessage(ctx.message.chat.id, 'reminder from ' + format(origin), {reply_to_message_id: ctx.message.message_id, allow_sending_without_reply: false /* this is not working */})
-      ctx.telegram.sendMessage(ctx.message.chat.id, 'reminder from ' + caller, {reply_to_message_id: ctx.message.message_id, allow_sending_without_reply: false /* this is not working */})
+      ctx.telegram.sendMessage(ctx.message.chat.id, 'reminder from ' + caller, {reply_to_message_id: ctx.message.message_id, allow_sending_without_reply: false/* this is not working */ })
    }
 
 }
