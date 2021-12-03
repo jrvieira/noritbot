@@ -70,8 +70,8 @@ let run = (ctx, data) => {
       let lastValue = x => x[Math.max(...Object.keys(x))]
 
       let completed = {
-         day: lastKey(m.completion_day_level)
-         part: lastKey(lastValue(m.completion_day_level))
+         day: lastKey(m.completion_day_level),
+         part: lastKey(lastValue(m.completion_day_level)),
          time: new Intl.DateTimeFormat("pt-PT",fmt).format(new Date(+m.last_star_ts*1000))
       }
 
