@@ -27,7 +27,7 @@ module.exports = {
 
       function run (r) {
 
-         ctx.reply(r)
+         ctx.replyWithHTML('<code>'+r+'</code>')
 
       }
 
@@ -57,7 +57,7 @@ module.exports = {
 
       function run (r) {
 
-         ctx.reply(r)
+         ctx.replyWithHTML('<code>'+r+'</code>')
 
       }
 
@@ -87,7 +87,7 @@ module.exports = {
 
       function run (r) {
 
-         ctx.reply(r)
+         ctx.replyWithHTML('<code>'+r+'</code>')
 
       }
 
