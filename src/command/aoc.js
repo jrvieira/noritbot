@@ -66,9 +66,12 @@ let run = (ctx, data) => {
 
    for (m of score) {
 
+      let lastKey = x => Math.max(...Object.keys(x))
+      let lastValue = x => x[Math.max(...Object.keys(x))]
+
       let completed = {
-         day: Math.ceil(m.stars/2),
-         part: (m.stars - 1) % 2 + 1,
+         day: lastKey(m.completion_day_level)
+         part: lastKey(lastValue(m.completion_day_level))
          time: new Intl.DateTimeFormat("pt-PT",fmt).format(new Date(+m.last_star_ts*1000))
       }
 
