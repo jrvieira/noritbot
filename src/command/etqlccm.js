@@ -53,7 +53,7 @@ module.exports = async ctx => {
          if (quotes.length) {
 
             let rand = util.random(quotes)
-            r = '<i>"' + rand.quote + '" - ' + rand.author + '</i>\n\n ' + rand.saved + ' tqlccm @ ' + rand.date + '\n\n'
+            r = '<i>"' + rand.quote + '"\n- ' + rand.author + '</i>\n\n ' + rand.saved + ' tqlccm @ ' + rand.date + '\n\n'
 
             rand.tags.forEach(function (t) {
                r += '#' + t + ' '

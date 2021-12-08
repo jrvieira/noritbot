@@ -4,12 +4,9 @@ const fs = require('fs')
 
 // load dictionary into memory
 
-let dict
-
-fs.readFile('mem/words.txt', 'utf8', function (err, data) {
-   if (err) throw new Error(err)
-   dict = new Set(data.split('\n'))
-})
+let data = fs.readFileSync('mem/words.txt', { encoding: 'utf8' })
+let dict = new Set(data.split('\n'))
+let dict_double = [...dict].filter(w => w.length >= 6)
 
 // initialize global variables
 
@@ -31,6 +28,9 @@ let scores = {} // scored words
 let mem = bot.mem.load('words') // hi scores
 let called = { time: 0, caller: null, duration: null } // last call
 let gap = 16 // time buffer
+// DOUBLE!
+let duration_double = 30*1000
+let winner_double = null
 
 module.exports = async ctx => {
 
@@ -118,19 +118,24 @@ module.exports = async ctx => {
          w += letter
       }
 
+      let word_double = util.random(dict_double)
+      let shuffled_double = [...word_double].sort(() => util.maybe() ? -1 : 1).join('')
+
       // start the game
 
       let pin = await bot.telegram.sendMessage(
          ctx.message.chat.id,
          '<b>WORDS!</b> ' + called.duration / 1000 + 's\n\n'
-            + '<code>' + [...w].join(' ') + '</code>',
+         + '<code>' + [...w].join(' ') + '</code>\n\n'
+         + '<code>' + shuffled_double  + '</code> <b>DOUBLE!</b>'
+         ,
          { parse_mode: 'HTML' }
       )
 
       bot.telegram.pinChatMessage(
          ctx.message.chat.id,
          pin.message_id,
-         { disable_notification: true }
+         { disable_notification: false }
       )
 
       console.info('WORDS! waiting for answers on', w)
@@ -142,25 +147,42 @@ module.exports = async ctx => {
          }
 
          let p = (ctx.message?.text || '').toUpperCase()
+
          let caller = await util.title(ctx)
 
-         if (Date.now() - called.time < called.duration && valid(p, caller)) {
-            console.info(p, 'valid')
-            if (!scores[caller]) scores[caller] = []
-            scores[caller].push(p)
-            ctx.replyWithHTML(caller + ' <b>' + val(p) + '!</b>')
+         if (Date.now() - called.time < called.duration) {
+
+            if (p === word_double && !winner_double) {
+               console.info(p, 'DOUBLE!')
+               winner_double = caller
+               ctx.replyWithHTML(caller + ' <b>x2!</b>')
+            }
+
+            if (valid(p, caller)) {
+               console.info(p, 'valid')
+               if (!scores[caller]) scores[caller] = []
+               scores[caller].push(p)
+               ctx.replyWithHTML(caller + ' <b>' + val(p) + '!</b>')
+            }
+
          }
 
       })
 
       // end the game
 
-      setTimeout(() => {
+      setTimeout(async () => {
+
+         bot.telegram.unpinChatMessage(
+            ctx.message.chat.id,
+            { message_id: pin.message_id }
+         )
 
          if (Object.values(scores).length) {
 
             for (let player in scores) {
                let pts = vals(scores[player])
+               if (player === winner_double) pts *= 2
                let hi = mem[player] || 0
                if (pts > hi) {
                   mem[player] = pts
@@ -182,7 +204,7 @@ module.exports = async ctx => {
                scoreboard += score[1]
                   .toString()
                   .padStart(padding,' ')
-                  + ' ' + score[0] + '\n'
+                  + ' ' + score[0] + (score[0] === winner_double ? ' *' : '') +'\n'
             }
 
             scoreboard += '\n🔥'
@@ -199,20 +221,22 @@ module.exports = async ctx => {
                + '<code>' + scoreboard + '</code>')
 
          } else {
+
             ctx.replyWithHTML('<b>ACABOU!</b>')
+
          }
+
+         ctx.replyWithHTML('The word was:\n\n<code>' + word_double + '</code>')
 
          // reset
 
-         bot.stt.busy = false
-
          w = ''
          wmap = {}
+         word_double = ''
+         shuffled_double = ''
+         winner_double = null
 
-         bot.telegram.unpinChatMessage(
-            ctx.message.chat.id,
-            { message_id: pin.message_id }
-         )
+         bot.stt.busy = false
 
       }, called.duration)
 
