@@ -20,17 +20,16 @@ alphabet = alphabet
 alphabet.push(wildcard)
 let vowels = ['A','E','I','O','U']
 
-let w = '' // letters
-let wmap = {}
+let mem = bot.mem.load('words') // hi scores
+
 let wn = 16 // number of letters
 let min = 6 // minimum word length
-let scores = {} // scored words
-let mem = bot.mem.load('words') // hi scores
 let called = { time: 0, caller: null, duration: null } // last call
 let gap = 16 // time buffer
 // DOUBLE!
 let duration_double = 30*1000
-let winner_double = null
+
+let playing = false
 
 module.exports = async ctx => {
 
@@ -75,6 +74,11 @@ module.exports = async ctx => {
 
       // call
 
+      let w = '' // letters
+      let wmap = {}
+      let scores = {} // scored words
+      let winner_double = null
+
       let caller = await util.title(ctx)
 
       let call = (d) => {
@@ -103,12 +107,6 @@ module.exports = async ctx => {
       // delete second call command
 
       bot.telegram.deleteMessage(ctx.message.chat.id,ctx.message.message_id)
-
-      // reset global variables
-
-      scores = {}
-      w = ''
-      wmap = {}
 
       // create puzzle
 
@@ -142,29 +140,21 @@ module.exports = async ctx => {
 
       bot.on('message', async ctx => {
 
-         if (w) {
+         if (playing) {
             setTimeout(() => bot.telegram.deleteMessage(ctx.message.chat.id,ctx.message.message_id), 1000)
-         }
-
-         let p = (ctx.message?.text || '').toUpperCase()
-
-         let caller = await util.title(ctx)
-
-         if (Date.now() - called.time < called.duration) {
-
+            let p = (ctx.message?.text || '').toUpperCase()
+            let caller = await util.title(ctx)
             if (p === word_double && !winner_double) {
-               console.info(p, 'DOUBLE!')
+               console.info(p, 'DOUBLE!', '\ncal', caller, '\nmsg', ctx.message.text, '\nppp', p, word_double)
                winner_double = caller
                ctx.replyWithHTML(caller + ' <b>x2!</b>')
             }
-
             if (valid(p, caller)) {
                console.info(p, 'valid')
                if (!scores[caller]) scores[caller] = []
                scores[caller].push(p)
                ctx.replyWithHTML(caller + ' <b>' + val(p) + '!</b>')
             }
-
          }
 
       })
@@ -228,17 +218,42 @@ module.exports = async ctx => {
 
          ctx.replyWithHTML('The word was:\n\n<code>' + word_double + '</code>')
 
-         // reset
-
-         w = ''
-         wmap = {}
-         word_double = ''
-         shuffled_double = ''
-         winner_double = null
-
-         bot.stt.busy = false
+         bot.stt.busy = playing = false
 
       }, called.duration)
+
+      // word validation
+
+      let valid = (p, caller) => {
+
+         // let done = scores?.[caller] || [] // own
+         let done = Object.values(scores).reduce((a,b) => a.concat(b), []) // all
+
+         if (p.length < min
+            || done.includes(p) // done
+            || done.includes(p + 'S') // singular
+            || (p.slice(-1) === 'S' && done.some(x => p === x + 'S')) // plural
+         // || (p.slice(-1) === 'O' && done.some(x => p.slice(0,-1) + 'A' === x)) // masculine
+         // || (p.slice(-1) === 'A' && done.some(x => p.slice(0,-1) + 'O' === x)) // feminine
+         // || done.some(x => p.slice(0,min - 1) === x.slice(0,min - 1)) // same root ~
+            || !dict.has(p)
+         ) return false
+
+         let m = Object.assign({},wmap)
+         let pp = [...p]
+         while (x = pp.pop()) {
+            if (m[x]) {
+               m[x] --
+            } else if (m[wildcard]) {
+               m[wildcard] --
+            } else {
+               return false
+            }
+         }
+
+         return true
+
+      }
 
    }
 
@@ -248,39 +263,6 @@ module.exports = async ctx => {
 
 let val = p => 2 ** (p.length - min) // word value
 let vals = arr => arr.map(x => val(x)).reduce((a,b) => a + b, 0) // total
-
-// word validation
-
-let valid = (p, caller) => {
-
-   // let done = scores?.[caller] || [] // own
-   let done = Object.values(scores).reduce((a,b) => a.concat(b), []) // all
-
-   if (p.length < min
-      || done.includes(p) // done
-      || done.includes(p + 'S') // singular
-      || (p.slice(-1) === 'S' && done.some(x => p === x + 'S')) // plural
-   // || (p.slice(-1) === 'O' && done.some(x => p.slice(0,-1) + 'A' === x)) // masculine
-   // || (p.slice(-1) === 'A' && done.some(x => p.slice(0,-1) + 'O' === x)) // feminine
-   // || done.some(x => p.slice(0,min - 1) === x.slice(0,min - 1)) // same root ~
-      || !dict.has(p)
-   ) return false
-
-   let m = Object.assign({},wmap)
-   let pp = [...p]
-   while (x = pp.pop()) {
-      if (m[x]) {
-         m[x] --
-      } else if (m[wildcard]) {
-         m[wildcard] --
-      } else {
-         return false
-      }
-   }
-
-   return true
-
-}
 
 // padding
 

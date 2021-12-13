@@ -68,6 +68,7 @@ module.exports = () => {
    bot.hears(/bonito/,      _ => !bot.stt.busy ? azia(-1) : null)
    bot.hears(/lindo/,       _ => !bot.stt.busy ? azia(-1) : null)
    bot.hears(/:\)/,         _ => !bot.stt.busy ? azia(-1) : null)
+   bot.hears(/aha/,         _ => !bot.stt.busy ? azia(-1) : null)
 
    let fns_t = 0
 
@@ -85,6 +86,6 @@ module.exports = () => {
    bot.hears(/\s+@*norit\s*/, ctx => !bot.stt.busy && fns_cooldown() && util.maybe(bot.stt.azia/10) ? ctx.reply('ETDLCCM') : null)
    bot.hears(/\s*ETQLCCM\s*/, ctx => !bot.stt.busy                   && util.maybe(bot.stt.azia/10) ? ctx.reply('*ETDLCCM') : null)
    bot.hears(/\s*:\)\s*/,     ctx => !bot.stt.busy && fns_cooldown() && util.maybe(bot.stt.azia/10) ? ctx.reply('👆👉') : null)
-   bot.hears(/aha/,           ctx => !bot.stt.busy && fns_cooldown() && util.maybe(bot.stt.azia/10) ? ctx.reply(Math.round(Math.random()*10)+'/10') : null)
+// bot.hears(/aha/,           ctx => !bot.stt.busy && fns_cooldown() && util.maybe(bot.stt.azia/10) ? ctx.reply(Math.round(Math.random()*10)+'/10') : null)
 
 }
