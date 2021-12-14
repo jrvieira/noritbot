@@ -39,8 +39,6 @@ let playing = false
 
 module.exports = async ctx => {
 
-   console.log('command#')
-
    // deactivate /words on main channel
    if (ctx.message.chat.id == bot.chn.prod) {
       bot.telegram.deleteMessage(ctx.message.chat.id,ctx.message.message_id)
@@ -52,11 +50,8 @@ module.exports = async ctx => {
 
    // command arguments
    let query = ctx.message.text.split(' ').slice(1).join(' ')
-   console.log('query#', query)
 
    if (query === 'top') { // hi scores
-
-      console.log('top#')
 
       let scoreboard = ''
 
@@ -74,7 +69,6 @@ module.exports = async ctx => {
 
    } else if (bot.stt.busy) { // bot i busy (ex: game is being played)
 
-      console.log('busy#')
       //ctx.replyWithHTML('<code>' + [...w].join(' ') + '</code>')
       bot.telegram.deleteMessage(ctx.message.chat.id,ctx.message.message_id)
 
@@ -82,7 +76,7 @@ module.exports = async ctx => {
       || +query === Math.round(query)
       && query >= gap
       && query <= 120
-   ) { console.log('$#')
+   ) {
 
       // call
 
