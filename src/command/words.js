@@ -136,7 +136,7 @@ module.exports = async ctx => {
          ctx.message.chat.id,
          '<b>WORDS!</b> ' + called.duration / 1000 + 's\n\n'
          + '<code>' + [...w].join(' ') + '</code>\n\n'
-         + '<code>' + shuffled_double  + '</code> <b>DOUBLE!</b>'
+         + '<code><b>DOUBLE!</b> ' + shuffled_double  + '</code>'
          ,
          { parse_mode: 'HTML' }
       )

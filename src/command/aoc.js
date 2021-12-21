@@ -56,33 +56,48 @@ let run = (ctx, data) => {
    score = []
    let echo = ''
 
-   for (let member of $(data.members)) {
-      score.push(member)
-   }
-   // rank by last star time
-   score.sort((a,b) => a.last_star_ts - b.last_star_ts)
-   // rank by number of stars
-   score.sort((a,b) => b.stars - a.stars)
-
-   for (m of score) {
+   for (let m of $(data.members)) {
 
       let lastKey = x => Math.max(0,...Object.keys(x))
       let lastValue = x => x[lastKey(x)] || 0
 
-      let completed = {
+      m.completed = {
          day: lastKey(m.completion_day_level) || 0,
          part: lastKey(lastValue(m.completion_day_level)) || 0,
-         time: new Intl.DateTimeFormat("pt-PT",fmt).format(new Date(+m.last_star_ts*1000))
+         time: new Intl.DateTimeFormat("pt-PT",fmt).format(new Date(+m.last_star_ts*1000)),
+         days: []
       }
 
-      if (completed.day) {
-         echo += String(completed.day).padStart(2,' ')
+      let i = 0
+      while (++i <= 25) {
+         m.completed.days.push(Object.keys(m.completion_day_level[i] || {}).length)
+      }
+
+      score.push(m)
+   }
+
+   // rank by last star time
+   score.sort((a,b) => a.last_star_ts - b.last_star_ts)
+   // rank by number of completed days
+   score.sort((a,b) => b.completed.days.filter(x => x == 2).length - a.completed.days.filter(x => x == 2).length)
+
+   for (let m of score) {
+
+      let map = {0:' ',1:'.',2:':'}
+      let completed_stars = m.completed.days.map(x => map[x]).join('')
+
+      if (m.completed.day) {
+         echo += String(m.completed.day).padStart(2,' ')
          echo += ' '
          echo += m.name
          echo += '\n'
-         echo += ''.padEnd(completed.part,'*').padStart(2,' ')
+         echo += ''.padEnd(m.completed.part,'*').padStart(2,' ')
          echo += ' '
-         echo += [...completed.time].filter(x => x != ',').join('').split(' ').reverse().join(' ')
+         echo += [...m.completed.time].filter(x => x != ',').join('').split(' ').reverse().join(' ')
+         echo += '\n'
+         echo += ''.padStart(2,' ')
+         echo += ' '
+         echo += completed_stars
          echo += '\n\n'
       }
 
