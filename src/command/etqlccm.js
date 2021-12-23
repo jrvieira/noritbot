@@ -26,7 +26,7 @@ module.exports = async ctx => {
             quote: reply.text,
             author: await util.title(ctx, reply.from.id),
             saved: caller,
-            tags: query
+            tags: query.map(x => x.replace(/^#*/,'')
          })
 
          bot.mem.save('etqlccm', mem)
