@@ -46,8 +46,11 @@ module.exports = async ctx => {
 
          let quotes = mem?.quotes || []
 
+
+         let tags = [...new Set(query.map(x => x.replace(/^#*/,'')))]
+
          if (query.length) {
-            quotes = quotes.filter(x => x.tags.find(x => query.includes(x)))
+            quotes = quotes.filter(x => x.tags.find(x => tags.includes(x)))
          }
 
          if (quotes.length) {
