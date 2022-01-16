@@ -6,7 +6,7 @@ const fs = require('fs')
 
 let data = fs.readFileSync('mem/words.txt', { encoding: 'utf8' })
 let dict = new Set(data.split('\n'))
-let dict_double = [...dict].filter(w => w.length == 6)
+let dict_double = [...dict].filter(w => [6,7,8,9].includes(w.length))
 
 // initialize global variables
 
