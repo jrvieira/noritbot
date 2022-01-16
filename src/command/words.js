@@ -182,8 +182,8 @@ module.exports = async ctx => {
          if (Object.values(scores).length) {
 
             for (let player in scores) {
+               if (player === winner_double) scores[player] = scores[player].concat(scores[player])
                let pts = vals(scores[player])
-               if (player === winner_double) pts *= 2
                let hi = mem[player] || 0
                if (pts > hi) {
                   mem[player] = pts
