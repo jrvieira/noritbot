@@ -15,6 +15,8 @@ bot.command('aoc'      , require('./command/aoc')            )
 bot.command('covid'    , require('./command/covid')          )
 bot.command('horoscope', require('./command/zodiac')         )
 bot.command('horoscopo', require('./command/zodiac')         )
+bot.command('suntzu'   , require('./command/taow')           )
+bot.command('taow'     , require('./command/taow')           )
 
 require('./command/oi')() // basic stuff
 
