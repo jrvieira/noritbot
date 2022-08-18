@@ -11,6 +11,8 @@ module.exports = {
 
       let options = {
          cwd: '/home/safe',
+         shell: '/bin/rbash',
+         detached: true,
       }
 
       execFile('/usr/local/bin/node',['-p',expr], options, (error, stdout, stderr) => {
