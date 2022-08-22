@@ -15,7 +15,7 @@ module.exports = {
          detached: true,
       }
 
-      execFile('/usr/local/bin/node',['-p',expr], options, (error, stdout, stderr) => {
+      execFile('node',['-p',expr], options, (error, stdout, stderr) => {
          if (error) {
             console.error(error)
             return run(':(')
@@ -45,7 +45,7 @@ module.exports = {
          cwd: '/home/safe',
       }
 
-      execFile('/usr/bin/ghc',['-ignore-dot-ghci','-e',expr], options, (error, stdout, stderr) => {
+      execFile('ghc',['-ignore-dot-ghci','-e',expr], options, (error, stdout, stderr) => {
          if (error) {
             console.error(error)
             return run(':(')
@@ -75,7 +75,7 @@ module.exports = {
          cwd: '/home/safe',
       }
 
-      execFile('/usr/bin/python',['-c',expr], options, (error, stdout, stderr) => {
+      execFile('python',['-c',expr], options, (error, stdout, stderr) => {
          if (error) {
             console.error(error)
             return run(':(')
