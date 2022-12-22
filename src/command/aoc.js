@@ -89,7 +89,7 @@ let run = (ctx, data) => {
       if (m.completed.day) {
          echo += String(m.completed.day).padStart(2,' ')
          echo += ' '
-         echo += m.name
+         echo += m.name || '#' + m.id
          echo += '\n'
          echo += ''.padEnd(m.completed.part,'*').padStart(2,' ')
          echo += ' '
