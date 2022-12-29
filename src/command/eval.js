@@ -15,7 +15,7 @@ module.exports = {
          detached: true,
       }
 
-      execFile('node',['-p',expr], options, (error, stdout, stderr) => {
+      execFile('node',['-p',JSON.stringify(expr)], options, (error, stdout, stderr) => {
          if (error) {
             console.error(error)
             return run(':(')
