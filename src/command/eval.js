@@ -13,6 +13,7 @@ module.exports = {
          cwd: '/home/safe',
          shell: '/bin/rbash',
          detached: true,
+         timeout: 2700,
       }
 
       execFile('node',['-p',JSON.stringify(expr)], options, (error, stdout, stderr) => {
@@ -43,6 +44,7 @@ module.exports = {
 
       let options = {
          cwd: '/home/safe',
+         timeout: 2700,
       }
 
       execFile('ghc',['-ignore-dot-ghci','-e',expr], options, (error, stdout, stderr) => {
@@ -73,6 +75,7 @@ module.exports = {
 
       let options = {
          cwd: '/home/safe',
+         timeout: 2700,
       }
 
       execFile('python',['-c',expr], options, (error, stdout, stderr) => {
