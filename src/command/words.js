@@ -181,9 +181,12 @@ module.exports = async ctx => {
 
          if (Object.values(scores).length) {
 
+            let scores_vals = {}
+
             for (let player in scores) {
-               if (player === winner_double) scores[player] = scores[player].concat(scores[player])
                let pts = vals(scores[player])
+               if (player === winner_double) pts = pts * 2
+               scores_vals[player] = pts
                let hi = mem[player] || 0
                if (pts > hi) {
                   mem[player] = pts
@@ -194,11 +197,6 @@ module.exports = async ctx => {
             bot.mem.save('words', mem)
 
             let scoreboard = ''
-            let scores_vals = {}
-
-            for (let player in scores) {
-               scores_vals[player] = vals(scores[player])
-            }
 
             let padding = pad(scores_vals)
             for (let score of Object.entries(scores_vals).sort((a,b) => a[1] > b[1] ? -1 : 1)) {
