@@ -120,7 +120,7 @@ let run = (ctx, data) => {
          echo += '\n'
          echo += ''.padEnd(m.completed.last_consec.part,'*').padStart(2,' ')
          echo += ' '
-         echo += [...ftime(m.completed.last_consec.time)].filter(x => x != ',').join('').split(' ').reverse().join(' ')
+         echo += m.completed.last_consec.day ? [...ftime(m.completed.last_consec.time)].filter(x => x != ',').join('').split(' ').reverse().join(' ') : ""
          echo += '\n'
          echo += ''.padStart(2,' ')
          echo += ' '
