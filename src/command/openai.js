@@ -4,6 +4,8 @@ const { exec } = require('child_process')
 
 let oai_key = bot.mem.load('env').oai_key
 
+let past = []
+
 module.exports = {
 
    ai: async ctx => {
@@ -13,12 +15,14 @@ module.exports = {
 
       if (!query) return null
 
+      past.push({role: "user", content: query})
+
       let comm = `curl -s 'https://api.openai.com/v1/chat/completions' \
 -H 'Content-Type: application/json' \
 -H 'Authorization: Bearer ${oai_key}' \
 -d '{ \
  "model": "gpt-3.5-turbo", \
- "messages": [{"role": "user", "content": "${encodeURI(query)}"}] \
+ "messages": ${JSON.stringify(past)} \
 }' \
 `
 
@@ -40,7 +44,9 @@ module.exports = {
       })
 
       function run (r) {
-         ctx.reply(caller + ': ' + r.choices[0].message.content)
+         let msg = r.choices[0].message.content
+         past.push({role: "assistant", content: msg})
+         ctx.reply(caller + ': ' + msg)
       }
 
    },
