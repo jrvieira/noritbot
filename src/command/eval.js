@@ -96,6 +96,37 @@ module.exports = {
 
       }
 
-   }
+   },
+
+   j: async ctx => {
+
+      let expr = ctx.message.text.split(' ').slice(1).join(' ')
+
+      if (!expr) return null
+
+      let options = {
+         cwd: '/home/safe',
+         timeout: 2700,
+      }
+
+      execFile('ijconsole',['-js',`echo ${expr}`,`exit''`], options, (error, stdout, stderr) => {
+         if (error) {
+            console.error(error)
+            return run(':(')
+         }
+         if (stderr) {
+            console.error(stderr)
+            return run(':(')
+         }
+         return run(stdout)
+      })
+
+      function run (r) {
+
+         ctx.replyWithHTML('<code>'+r+'</code>')
+
+      }
+
+   },
 
 }
