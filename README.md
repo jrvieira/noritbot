@@ -26,7 +26,8 @@ https://core.telegram.org/bots/api
 - [x] covid
 - [ ] [warzone](https://develop.battle.net/)
 - [ ] estatísticas do canal: https://core.telegram.org/api/stats
-- [x] interpretador de código (js/hs/py)
+- [x] interpretador de código (js/hs/py/J/sc)
 - [x] wolfram alpha
 - [x] horoscopo
 - [x] word game
+- [x] OpenAI
