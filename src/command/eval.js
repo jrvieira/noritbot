@@ -131,7 +131,7 @@ module.exports = {
 
    },
 
-   sc: async ctx => {
+   scm: async ctx => {
 
       let expr = ctx.message.text.split(' ').slice(1).join(' ')
 
