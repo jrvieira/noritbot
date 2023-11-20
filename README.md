@@ -1,7 +1,5 @@
 # noritbot
 
-LAN bot
-
 ## telegraf docs (node client)
 
 https://telegraf.js.org/
