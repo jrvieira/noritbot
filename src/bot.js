@@ -44,7 +44,7 @@ bot.command('debug', async ctx => {
       console.error(e)
    } finally {
       console.info('* ctx.message', ctx.message)
-      //console.info('* reply', bot.telegram.sendMessage)
+   // console.info('* reply', bot.telegram.sendMessage)
    }
 
 })
