@@ -1,5 +1,6 @@
 node_modules
 ecosystem.config.js
+package-lock.json
 mem/*
 !mem/quotes.json
 !mem/taow.json
