@@ -43,22 +43,9 @@ module.exports = async ctx => {
 
    }
 
-   // setReminder is a better setTimeout without 32bit signed int limitation
-   function setReminder (f, t) {
-
-      t = t < 0 ? 0 : t
-
-      if (t >= 2**31) {
-         setTimeout(() => setReminder(f, t - 2**31 + 1), 2**31 - 1)
-      } else {
-         setTimeout(f, t)
-      }
-
-   }
-
    if (reminder >= 1000 * 60) {
 
-      setReminder(() => runReply(), reminder)
+      util.setReminder(() => runReply(), reminder)
       let target = origin + reminder
       //run('reminding @ ' + format(target) + ' UTC')
       run('ok')
