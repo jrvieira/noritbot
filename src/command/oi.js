@@ -88,4 +88,27 @@ module.exports = () => {
    bot.hears(/\s*:\)\s*/,     ctx => !bot.stt.busy && fns_cooldown() && util.maybe(bot.stt.azia/10) ? ctx.reply('👆👉') : null)
 // bot.hears(/aha/,           ctx => !bot.stt.busy && fns_cooldown() && util.maybe(bot.stt.azia/10) ? ctx.reply(Math.round(Math.random()*10)+'/10') : null)
 
+   // adventofcode alarm
+
+   function alarm () {
+      const now = new Date()
+      let aoc = new Date(now.getFullYear(), 11, 1, 5, 0, 0, 0)
+      while (aoc < now && aoc.getDate() <= 25) {
+         aoc.setMonth(11,aoc.getDate() + 1)
+      }
+      if (aoc.getDate() > 25) {
+         aoc = new Date(aoc.getFullYear() + 1, 11, 1, 5, 0, 0, 0)
+      }
+      const til = aoc.getTime() - now.getTime()
+      setTimeout(() => {
+
+         const url = 'https://adventofcode.com/' + now.getFullYear() + '/day/' + now.getDate()
+         bot.telegram.sendMessage(bot.chn.prod, 'aoc! ' + url);
+
+         alarm()
+      }, til)
+   }
+
+   alarm()
+
 }

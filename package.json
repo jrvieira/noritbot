@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "humanize-duration": "^3.31.0",
     "jlast": "^1.0.2",
     "telegraf": "^3.38.0"
   }

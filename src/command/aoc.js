@@ -1,12 +1,30 @@
 const bot = require('../core')
 const { exec } = require('child_process')
+const humanize = require("humanize-duration")
 
 const aoc_sess = bot.mem.load('env').aoc_sess
 
 module.exports = async ctx => {
 
    let query = ctx.message.text.split(' ').slice(1).join(' ')
-   fetch(ctx, query || new Date().getFullYear())
+
+   query == 'next' ? next(ctx) : fetch(ctx, query || new Date().getFullYear())
+
+}
+
+let next = ctx => {
+
+   const now = new Date()
+   let aoc = new Date(now.getFullYear(), 11, 1, 5, 0, 0, 0)
+   while (aoc < now && aoc.getDate() <= 25) {
+      aoc.setMonth(11,aoc.getDate() + 1)
+   }
+   if (aoc.getDate() > 25) {
+      aoc = new Date(aoc.getFullYear() + 1, 11, 1, 5, 0, 0, 0)
+   }
+   const til = aoc.getTime() - now.getTime()
+
+   ctx.replyWithHTML('next aoc in ' + humanize(til, { largest: 1 , units: ["d", "h", "m", "s"] , round: true , delimiter: " " }))
 
 }
 
