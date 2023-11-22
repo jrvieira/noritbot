@@ -45,7 +45,7 @@ module.exports = async ctx => {
 
    if (reminder >= 1000 * 60) {
 
-      util.setReminder(() => runReply(), reminder)
+      util.timer(() => runReply(), reminder)
       let target = origin + reminder
       //run('reminding @ ' + format(target) + ' UTC')
       run('ok')

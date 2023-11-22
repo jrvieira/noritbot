@@ -19,14 +19,14 @@ module.exports = {
 
    maybe: (n = .5) => n > Math.random(),
 
-   // setReminder is a better setTimeout without 32bit signed int limitation
+   // timer is a better setTimeout without 32bit signed int limitation
 
-   setReminder: (f, t) => {
+   timer: (f, t) => {
 
       t = t < 0 ? 0 : t
 
       if (t >= 2**31) {
-         setTimeout(() => setReminder(f, t - 2**31 + 1), 2**31 - 1)
+         setTimeout(() => timer(f, t - 2**31 + 1), 2**31 - 1)
       } else {
          setTimeout(f, t)
       }
