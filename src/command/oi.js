@@ -100,10 +100,10 @@ module.exports = () => {
          aoc = new Date(aoc.getFullYear() + 1, 11, 1, 5, 0, 0, 0)
       }
       const til = aoc.getTime() - now.getTime()
-      setTimeout(() => {
+      util.setReminder(() => {
 
          const url = 'https://adventofcode.com/' + now.getFullYear() + '/day/' + now.getDate()
-         bot.telegram.sendMessage(bot.chn.prod, 'aoc! ' + url);
+         bot.telegram.sendMessage(bot.chn.dev, 'new aoc! ' + url);
 
          alarm()
       }, til)
