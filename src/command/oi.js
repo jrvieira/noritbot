@@ -103,7 +103,7 @@ module.exports = () => {
       util.setReminder(() => {
 
          const url = 'https://adventofcode.com/' + now.getFullYear() + '/day/' + now.getDate()
-         bot.telegram.sendMessage(bot.chn.dev, 'new aoc! ' + url);
+         bot.telegram.sendMessage(bot.chn.prod, 'new aoc! ' + url);
 
          alarm()
       }, til)
